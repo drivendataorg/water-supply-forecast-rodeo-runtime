@@ -1,5 +1,9 @@
 import os
-import loguru
 from pathlib import Path
 
-DATA_ROOT = Path(os.getenv("WSFR_DATA_ROOT", Path.cwd() / "data")).resolve()
+from loguru import logger
+
+DATA_ROOT = Path(os.getenv("WSFR_DATA_ROOT", Path.cwd() / "data"))
+METADATA_FILE = DATA_ROOT / "metadata.csv"
+
+logger.info(f"DATA_ROOT is {DATA_ROOT}")

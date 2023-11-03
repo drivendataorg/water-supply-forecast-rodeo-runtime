@@ -3,16 +3,20 @@ from typing import Annotated, Any
 
 from loguru import logger
 from pydantic import BaseModel, Field, field_validator
-from yaml import safe_load
 import typer
+from yaml import safe_load
 
 from wsfr_download.grace_indicators import download_grace_indicators
 from wsfr_download.mjo import download_mjo
 from wsfr_download.nino_regions_sst import download_nino_regions_sst
 from wsfr_download.oni import download_oni
 from wsfr_download.pdo import download_pdo
+from wsfr_download.pdsi import download_pdsi
 from wsfr_download.pna import download_pna
+from wsfr_download.snodas import download_snodas
+from wsfr_download.snotel import download_snotel
 from wsfr_download.soi import download_soi
+from wsfr_download.usgs_streamflow import download_usgs_streamflow
 
 app = typer.Typer(
     help=(
@@ -24,12 +28,16 @@ app = typer.Typer(
 
 # Registry mapping data source keywords to respective download functions
 DATA_SOURCE_TO_FUNCTION = {
+    "usgs_streamflow": download_usgs_streamflow,
     "grace_indicators": download_grace_indicators,
     "mjo": download_mjo,
     "nino_regions_sst": download_nino_regions_sst,
     "oni": download_oni,
     "pdo": download_pdo,
+    "pdsi": download_pdsi,
     "pna": download_pna,
+    "snodas": download_snodas,
+    "snotel": download_snotel,
     "soi": download_soi,
 }
 

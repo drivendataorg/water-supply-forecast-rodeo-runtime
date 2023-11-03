@@ -15,9 +15,9 @@ https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-de
 
 from datetime import datetime
 import functools
-import threading
 from pathlib import Path
-from typing import Annotated, List
+import threading
+from typing import Annotated
 
 from loguru import logger
 import netCDF4 as nc
@@ -35,7 +35,7 @@ lock = threading.Lock()
 POSSIBLE_DATES = pd.Series(pd.date_range("2002-04-01", "2023-07-21", freq="7D"))
 
 
-def generate_source_urls(date: str, try_extensions: List[str] = ["030", "040"]) -> List[str]:
+def generate_source_urls(date: str, try_extensions: list[str] = ["030", "040"]) -> list[str]:
     """Get possible source URLs based on a date in the format YYYYMMDD"""
     return [
         f"https://nasagrace.unl.edu/data/{date}/GRACEDADM_CLSM0125US_7D.A{date}.{ext}.nc4"
@@ -43,7 +43,7 @@ def generate_source_urls(date: str, try_extensions: List[str] = ["030", "040"]) 
     ]
 
 
-def dates_in_range(start_date: datetime, end_date: datetime) -> List[str]:
+def dates_in_range(start_date: datetime, end_date: datetime) -> list[str]:
     """Get all of the possible dates within a given time range. Data is
     available for dates starting with 2002-04-01, and every 7 days after
     that.
@@ -120,7 +120,7 @@ def validate_netcdf4(file_path: Path):
 
 
 def download_grace_indicators(
-    forecast_years: Annotated[List[int], typer.Argument(help="Forecast years to download for.")],
+    forecast_years: Annotated[list[int], typer.Argument(help="Forecast years to download for.")],
     fy_start_month: Annotated[int, typer.Option(help="Forecast year start month.")] = 10,
     fy_start_day: Annotated[int, typer.Option(help="Forecast year start day.")] = 1,
     fy_end_month: Annotated[int, typer.Option(help="Forecast year end month.")] = 7,

@@ -18,7 +18,9 @@ import requests
 
 from wsfr_download.config import DATA_ROOT
 
-SOURCE_URL = "https://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_mjo_index/proj_norm_order.ascii"
+SOURCE_URL = (
+    "https://www.cpc.ncep.noaa.gov/products/precip/CWlink/daily_mjo_index/proj_norm_order.ascii"
+)
 FILE_PATH_PARTS = ("teleconnections", "mjo.txt")
 
 

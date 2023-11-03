@@ -7,8 +7,14 @@
 
 forecast_years: [2005, 2007, 2009, 2011, 2013, 2015, 2017, 2019, 2021, 2023]
 data_sources:
+  # Antecedent streamflow
+  - name: usgs_streamflow
+  # Snowpack
+  - name: snotel
+  - name: snodas
   # Drought/moisture conditions
   - name: grace_indicators
+  - name: pdsi
   # Teleconnections
   - name: mjo
   - name: nino_regions_sst
