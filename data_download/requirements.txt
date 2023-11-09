@@ -7,18 +7,34 @@
 annotated-types==0.6.0
     # via pydantic
 attrs==23.1.0
-    # via zeep
+    # via
+    #   fiona
+    #   zeep
 certifi==2023.7.22
     # via
+    #   fiona
     #   netcdf4
+    #   pyproj
     #   requests
 cftime==1.6.3
     # via netcdf4
 charset-normalizer==3.3.1
     # via requests
 click==8.1.7
-    # via typer
+    # via
+    #   click-plugins
+    #   cligj
+    #   fiona
+    #   typer
+click-plugins==1.1.1
+    # via fiona
+cligj==0.7.2
+    # via fiona
 dataretrieval==1.0.6
+    # via wsfr-download (data_download/pyproject.toml)
+fiona==1.9.5
+    # via geopandas
+geopandas==0.14.0
     # via wsfr-download (data_download/pyproject.toml)
 idna==3.4
     # via requests
@@ -35,10 +51,14 @@ numpy==1.26.1
     #   cftime
     #   netcdf4
     #   pandas
+    #   shapely
     #   wsfr-download (data_download/pyproject.toml)
+packaging==23.2
+    # via geopandas
 pandas==2.1.2
     # via
     #   dataretrieval
+    #   geopandas
     #   wsfr-download (data_download/pyproject.toml)
 platformdirs==3.11.0
     # via zeep
@@ -46,6 +66,8 @@ pydantic==2.4.2
     # via wsfr-download (data_download/pyproject.toml)
 pydantic-core==2.10.1
     # via pydantic
+pyproj==3.6.1
+    # via geopandas
 python-dateutil==2.8.2
     # via pandas
 pytz==2023.3.post1
@@ -65,8 +87,11 @@ requests-file==1.5.1
     # via zeep
 requests-toolbelt==1.0.0
     # via zeep
+shapely==2.0.2
+    # via geopandas
 six==1.16.0
     # via
+    #   fiona
     #   isodate
     #   python-dateutil
     #   requests-file
@@ -85,3 +110,6 @@ urllib3==2.0.7
     # via requests
 zeep==4.2.1
     # via wsfr-download (data_download/pyproject.toml)
+
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools

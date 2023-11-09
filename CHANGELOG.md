@@ -1,5 +1,9 @@
 # Changelog
 
+## November 8, 2023
+
+- Added missing geopandas dependency to `wsfr-download`
+
 ## November 7, 2023
 
 Data download additions:
