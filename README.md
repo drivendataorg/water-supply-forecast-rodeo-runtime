@@ -29,6 +29,13 @@ pip install -r ./data_download/requirements.txt
 pip install ./data_download/
 ```
 
+By default, data is saved into a subdirectory named `data/` relative to your current working directory. You can explicitly override this by setting the environment variable `WSFR_DATA_ROOT` with another directory path. The expected default usage is that you run all commands with the root directory of this repository as your working directory.
+
+You will also need to download the following files from the competition [data download page](https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/data/) and place them into your data directory. The data download scripts will depend on some of these files.
+
+- `geospatial.gpkg` -> `data/geospatial.gpkg`
+- `metadata.csv` -> `data/metadata.csv`
+
 ### Usage
 
 To simply download all test feature data that will be available, use the `bulk` command. From the repository root as your working directory, run:
@@ -52,8 +59,6 @@ python -m wsfr_download grace_indicators --help
 ```
 
 There is also the `bulk` command for downloading multiple data sources at once, as shown in the previous section. A bulk download is configured by a YAML configuration file. The configuration file for the Hindcast test set is [`data_download/hindcast_test_config.yml`](data_download/hindcast_test_config.yml). To download feature data for training, create your own YAML configuration file for the years and data sources that you need using the test set file as an example.
-
-By default, data is saved into a subdirectory named `data/` relative to your current working directory. You can explicitly override this by setting the environment variable `WSFR_DATA_ROOT`.
 
 ## Data reading
 
