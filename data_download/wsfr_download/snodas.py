@@ -39,8 +39,7 @@ from tqdm.contrib.concurrent import thread_map
 import typer
 
 from wsfr_download.config import DATA_ROOT
-
-rng = np.random.RandomState(75)
+from wsfr_download.utils import DownloadResult, log_download_results
 
 
 def urls_for_date_range(start_date: datetime, end_date: datetime) -> list[str]:
@@ -64,21 +63,20 @@ def date_url(date: datetime) -> str:
     return url
 
 
-def download_from_url(source_url: str, out_dir: Path) -> Path:
+def download_from_url(source_url: str, out_dir: Path, skip_existing: bool) -> DownloadResult:
     """Download a SNODAS file based on its source URL. The file will be saved to
-    out_dir with the same filename as the URL. Returns the path to the downloaded
-    file if a new file is downloaded, and None if the file already exists.
+    out_dir with the same filename as the URL.
     """
     filename = source_url.split("/")[-1]
     out_file = out_dir / filename
-    if out_file.exists():
-        return None
+    if skip_existing and out_file.exists():
+        return DownloadResult.SKIPPED_EXISTING
 
     response = requests.get(source_url)
     with open(out_file, "wb") as f:
         f.write(response.content)
 
-    return out_file
+    return DownloadResult.SUCCESS
 
 
 def download_snodas(
@@ -87,6 +85,7 @@ def download_snodas(
     fy_start_day: Annotated[int, typer.Option(help="Forecast year start day.")] = 1,
     fy_end_month: Annotated[int, typer.Option(help="Forecast year end month.")] = 7,
     fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 21,
+    skip_existing: Annotated[bool, typer.Option(help="Whether to skip an existing file.")] = True,
 ):
     """Download SNODAS data from NOAA NSIDC:
     https://noaadata.apps.nsidc.org/NOAA/G02158/masked/
@@ -97,7 +96,7 @@ def download_snodas(
     """
     logger.info("Downloading SNODAS data...")
 
-    all_files_downloaded = []
+    all_download_results = []
     for fy in forecast_years:
         # Get all URLs to download in given forecast year
         fy_start = datetime(fy - 1, fy_start_month, fy_start_day)
@@ -112,18 +111,16 @@ def download_snodas(
             f"Downloading {len(fy_urls)} files for forecast year {fy}"
             f" ({fy_start.strftime('%Y-%m-%d')} to {fy_end.strftime('%Y-%m-%d')})"
         )
-        fy_files_downloaded = thread_map(
-            functools.partial(download_from_url, out_dir=out_dir),
+        fy_download_results = thread_map(
+            functools.partial(download_from_url, out_dir=out_dir, skip_existing=skip_existing),
             fy_urls,
             total=len(fy_urls),
             chunksize=1,
         )
-        fy_files_downloaded = [file for file in fy_files_downloaded if file]
-        all_files_downloaded += fy_files_downloaded
+        all_download_results += fy_download_results
 
-    logger.success(
-        f"SNODAS download complete. Downloaded {len(all_files_downloaded):,} new files."
-    )
+    log_download_results(all_download_results)
+    logger.success("SNODAS download complete.")
 
 
 if __name__ == "__main__":

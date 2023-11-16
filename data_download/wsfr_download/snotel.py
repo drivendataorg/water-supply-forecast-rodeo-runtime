@@ -23,21 +23,23 @@ from loguru import logger
 import pandas as pd
 import requests
 from shapely.geometry import Point
+import stamina
 from tqdm.contrib.concurrent import thread_map
 import typer
 import zeep
 
 from wsfr_download.config import DATA_ROOT
-from wsfr_download.utils import site_geospatial
+from wsfr_download.utils import (
+    DownloadResult,
+    log_download_results,
+    site_geospatial,
+    site_geospatial_buffered,
+)
 
 SNOTEL_DIR = DATA_ROOT / "snotel"
 
 NRCS_AWDB_SOAP_WSDL_URL = "https://wcc.sc.egov.usda.gov/awdbWebService/services?WSDL"
 NRCS_AWDB_REST_DATA_ENDPOINT = "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1/data"
-
-# A SNOTEL site must be within this many meters of a drainage basin to be considered
-# Default is 40 miles ~= 64K meters
-DRAINAGE_BASIN_BUFFER = 64_373.8
 
 ELEMENT_CODES = (
     "WTEQ",  # Snow Water Equivalent (in)
@@ -57,20 +59,6 @@ def get_snotel_station_metadata(client: zeep.Client):
     # Need to serialize from zeep models to Python dictionaries before passing to pandas
     snotel_df = pd.DataFrame.from_records(zeep.helpers.serialize_object(data))
     return snotel_df.set_index("stationTriplet")
-
-
-def load_buffered_basins(buffer: float):
-    """Returns basin geodataframe with buffer (meters) applied."""
-    # Load drainage basin polygons
-    geospatial_gdf = site_geospatial(layer="basins")
-
-    # Create buffered polygons
-    # NAD 1983 Lambert contiguous USA
-    # https://epsg.io/102004
-    buffered_gdf = geospatial_gdf.to_crs("ESRI:102004")
-    buffered_gdf["geometry"] = buffered_gdf["geometry"].buffer(buffer)
-    buffered_gdf = buffered_gdf.to_crs("WGS84")
-    return buffered_gdf
 
 
 def build_awdb_data_query_string(
@@ -102,6 +90,14 @@ def _get_session() -> requests.Session:
     return thread_local.session
 
 
+@stamina.retry(
+    on=(requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError),
+    attempts=5,
+    wait_initial=10.0,
+    wait_max=60.0,
+    wait_exp_base=1.5,
+    timeout=None,
+)
 def get_data_for_station(
     station_triplet: str, begin_date: datetime.date, end_date: datetime.date
 ) -> pd.DataFrame:
@@ -118,7 +114,7 @@ def get_data_for_station(
         )
     )
     session = _get_session()
-    response = session.get(url, timeout=10)
+    response = session.get(url)
     data = {
         entry["stationElement"]["elementCode"]
         + "_"
@@ -139,16 +135,23 @@ def _series_from_date_value_dicts(arr: list[dict]):
 
 
 def download_station_data(
-    station_triplet: str, begin_date: datetime.date, end_date: datetime.date, out_dir: Path
-) -> int:
+    station_triplet: str,
+    begin_date: datetime.date,
+    end_date: datetime.date,
+    out_dir: Path,
+    skip_existing: bool,
+) -> DownloadResult:
     """Downloads SNOTEL station daily data to disk."""
+    out_file = out_dir / f"{station_triplet.replace(':', '_')}.csv"
+    if skip_existing and out_file.exists():
+        return DownloadResult.SKIPPED_EXISTING
     try:
         data_df = get_data_for_station(station_triplet, begin_date, end_date)
-        out_file = out_dir / f"{station_triplet.replace(':', '_')}.csv"
         data_df.to_csv(out_file)
-        return out_file
+        return DownloadResult.SUCCESS
     except IndexError:
         logger.warning(f"No data for {station_triplet}, {begin_date} to {end_date}")
+        return DownloadResult.SKIPPED_NO_DATA
 
 
 def download_snotel(
@@ -157,6 +160,7 @@ def download_snotel(
     fy_start_day: Annotated[int, typer.Option(help="Forecast year start day.")] = 1,
     fy_end_month: Annotated[int, typer.Option(help="Forecast year end month.")] = 7,
     fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 21,
+    skip_existing: Annotated[bool, typer.Option(help="Whether to skip an existing file.")] = True,
 ):
     """Download SNOTEL station daily station measurements from the NRCS AWDB:
     https://www.nrcs.usda.gov/wps/portal/wcc/home/dataAccessHelp/webService
@@ -178,14 +182,18 @@ def download_snotel(
     logger.info("Downloading SNOTEL data...")
     SNOTEL_DIR.mkdir(exist_ok=True, parents=True)
 
-    logger.info("Getting SNOTEL station metadata...")
-    with zeep.Client(NRCS_AWDB_SOAP_WSDL_URL) as client:
-        snotel_df = get_snotel_station_metadata(client)
-
-    # Save snowtel metadata to disk
     snotel_metadata_out_file = SNOTEL_DIR / "station_metadata.csv"
-    snotel_df.to_csv(snotel_metadata_out_file)
-    logger.info(f"SNOTEL station metadata saved to: {snotel_metadata_out_file}")
+    if skip_existing and snotel_metadata_out_file.exists():
+        logger.info(f"SNOTEL station metadata exists at {snotel_metadata_out_file}. Skipping.")
+        snotel_df = pd.read_csv(snotel_metadata_out_file, index_col="stationTriplet")
+    else:
+        logger.info("Getting SNOTEL station metadata...")
+        with zeep.Client(NRCS_AWDB_SOAP_WSDL_URL) as client:
+            snotel_df = get_snotel_station_metadata(client)
+
+        # Save snowtel metadata to disk
+        snotel_df.to_csv(snotel_metadata_out_file)
+        logger.info(f"SNOTEL station metadata saved to: {snotel_metadata_out_file}")
 
     # Get snotel station geodataframe
     snotel_gdf = gpd.GeoDataFrame(
@@ -197,7 +205,7 @@ def download_snotel(
     )
 
     basins_gdf = site_geospatial(layer="basins")
-    buffered_basins_gdf = load_buffered_basins(DRAINAGE_BASIN_BUFFER)
+    buffered_basins_gdf = site_geospatial_buffered()
 
     logger.info("Performing spatial join from SNOTEL sites to buffered site basin polygons.")
     # Do a spatial join with original basins
@@ -228,7 +236,7 @@ def download_snotel(
     avail_df["beginDate"] = pd.to_datetime(avail_df["beginDate"])
     avail_df["endDate"] = pd.to_datetime(avail_df["endDate"])
 
-    all_files_downloaded = []
+    all_download_results = []
     for fy in forecast_years:
         fy_start = datetime.date(fy - 1, fy_start_month, fy_start_day)
         fy_end = datetime.date(fy, fy_end_month, fy_end_day)
@@ -245,18 +253,19 @@ def download_snotel(
             & (avail_df["endDate"].dt.date > fy_start)  # if overlap on xxxx-10-01, no data
         ].index.values
 
-        files_downloaded = thread_map(
+        download_results = thread_map(
             functools.partial(
                 download_station_data,
                 begin_date=fy_start,
                 end_date=fy_end,
                 out_dir=out_dir,
+                skip_existing=skip_existing,
             ),
             with_data_snotel_triplets,
             total=len(with_data_snotel_triplets),
             chunksize=1,
         )
-        all_files_downloaded += files_downloaded
+        all_download_results += download_results
 
-    num_downloads = sum(1 for path in all_files_downloaded if path is not None)
-    logger.success(f"SNOTEL download complete. Downloaded {num_downloads:,} new files.")
+    log_download_results(all_download_results)
+    logger.success("SNOTEL download complete.")

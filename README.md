@@ -35,6 +35,8 @@ You will also need to download the following files from the competition [data do
 
 - `geospatial.gpkg` -> `data/geospatial.gpkg`
 - `metadata.csv` -> `data/metadata.csv`
+- `cdec_snow_stations.csv` -> `data/cdec_snow_stations.csv`
+- `cpc_climate_divisions.gpkg` -> `data/cpc_climate_divisions.gpkg`
 
 ### Usage
 
@@ -59,6 +61,8 @@ python -m wsfr_download grace_indicators --help
 ```
 
 There is also the `bulk` command for downloading multiple data sources at once, as shown in the previous section. A bulk download is configured by a YAML configuration file. The configuration file for the Hindcast test set is [`data_download/hindcast_test_config.yml`](data_download/hindcast_test_config.yml). To download feature data for training, create your own YAML configuration file for the years and data sources that you need using the test set file as an example.
+
+By default, all download functions will skip downloading data for files that already exist in your data directory. This is controlled by an option called `skip_existing`. To force downloads to overwrite existing files, set `skip_existing` to `false` in the bulk download config file when using the `bulk` command, or use the `--no-skip-existing` flag when using an individual data source's download command.
 
 ## Data reading
 

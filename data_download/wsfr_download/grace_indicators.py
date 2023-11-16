@@ -27,6 +27,7 @@ from tqdm.contrib.concurrent import thread_map
 import typer
 
 from wsfr_download.config import DATA_ROOT
+from wsfr_download.utils import DownloadResult, log_download_results
 
 lock = threading.Lock()
 
@@ -57,15 +58,13 @@ def dates_in_range(start_date: datetime, end_date: datetime) -> list[str]:
     )
 
 
-def download_for_date(date: str, out_dir: Path) -> int:
+def download_for_date(date: str, out_dir: Path, skip_existing: bool) -> DownloadResult:
     """Download the data for a given date
 
     Args:
         date (str): Date in the format '%Y%m%d'
         out_dir (Path): Directory to save file
-
-    Returns:
-        int: 1 if a netCDF4 file was downloaded, 0 if not
+        skip_existing (bool): Whether or not to skip if file already exists
     """
     source_urls = generate_source_urls(date)
 
@@ -74,9 +73,9 @@ def download_for_date(date: str, out_dir: Path) -> int:
         out_file = out_dir / filename
 
         # If out file exists, validates file and deletes if bad file
-        if out_file.exists():
+        if skip_existing and out_file.exists():
             if validate_netcdf4(out_file):
-                return 1
+                return DownloadResult.SKIPPED_EXISTING
 
         # Download from source URL and validate
         response = requests.get(url)
@@ -85,14 +84,14 @@ def download_for_date(date: str, out_dir: Path) -> int:
                 fp.write(response.content)
 
             if validate_netcdf4(out_file):
-                return 1
+                return DownloadResult.SUCCESS
 
     logger.warning(
         f"Could not download file for {date}. "
         f"{response.status_code}: {response.reason} error for {url}"
     )
 
-    return 0
+    return DownloadResult.SKIPPED_NO_DATA
 
 
 def validate_netcdf4(file_path: Path):
@@ -125,6 +124,7 @@ def download_grace_indicators(
     fy_start_day: Annotated[int, typer.Option(help="Forecast year start day.")] = 1,
     fy_end_month: Annotated[int, typer.Option(help="Forecast year end month.")] = 7,
     fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 21,
+    skip_existing: Annotated[bool, typer.Option(help="Whether to skip an existing file.")] = True,
 ):
     """Download GRACE indicator data from the NASA GRACE CONUS data archive:
     https://nasagrace.unl.edu/ConusData.aspx
@@ -134,9 +134,9 @@ def download_grace_indicators(
     by default, FY2021 starts on 2020-10-01 and ends on 2021-07-21.
     """
     logger.info(f"Downloading GRACE indicator data for forecast years: {forecast_years}")
-    downloads = 0
 
     date_count = 0
+    all_download_results = []
     for fy in forecast_years:
         fy_start = datetime(fy - 1, fy_start_month, fy_start_day)
         fy_end = datetime(fy, fy_end_month, fy_end_day)
@@ -150,15 +150,13 @@ def download_grace_indicators(
 
         dates = dates_in_range(fy_start, fy_end)
         date_count += len(dates)
-        download_statuses = thread_map(
-            functools.partial(download_for_date, out_dir=out_dir),
+        download_results = thread_map(
+            functools.partial(download_for_date, out_dir=out_dir, skip_existing=skip_existing),
             dates,
             total=len(dates),
             chunksize=1,
         )
-        downloads += sum(download_statuses)
+        all_download_results += download_results
 
-    logger.success(
-        "GRACE indicator download complete. "
-        f"Downloaded {downloads:,} files out of {date_count:,} expected."
-    )
+    log_download_results(all_download_results, f"[{date_count:,} dates checked.]")
+    logger.success("GRACE indicator download complete.")

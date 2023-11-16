@@ -23,6 +23,7 @@ import requests
 import typer
 
 from wsfr_download.config import DATA_ROOT
+from wsfr_download.utils import DownloadResult, log_download_results
 
 
 def build_url(start_date: str, end_date: str) -> str:
@@ -41,10 +42,9 @@ def build_url(start_date: str, end_date: str) -> str:
     return url
 
 
-def download_time_range(start: str, end: str, out_file: Path) -> bool:
+def download_time_range(start: str, end: str, out_file: Path) -> DownloadResult:
     """Download PDSI data for the continental US in the specified time
-    frame in NetCDF4 format. Returns True if a file is downloaded and
-    False if not.
+    frame in NetCDF4 format.
 
     Args:
         start (str): Start date in the format %Y-%m-%d
@@ -58,12 +58,12 @@ def download_time_range(start: str, end: str, out_file: Path) -> bool:
             f"Could not download file. "
             f"{response.status_code}: {response.reason} error for {url}"
         )
-        return False
+        return DownloadResult.SKIPPED_NO_DATA
 
     with out_file.open("wb") as fp:
         fp.write(response.content)
 
-    return True
+    return DownloadResult.SUCCESS
 
 
 def validate_netcdf4(file_path: Path, fy_start_month: int, fy_end_month: int) -> bool:
@@ -107,6 +107,7 @@ def download_pdsi(
     fy_start_day: Annotated[int, typer.Option(help="Forecast year start day.")] = 1,
     fy_end_month: Annotated[int, typer.Option(help="Forecast year end month.")] = 7,
     fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 21,
+    skip_existing: Annotated[bool, typer.Option(help="Whether to skip an existing file.")] = True,
 ):
     """Download Palmer Drought Severity Index data from the
     THREDDS server (NetcdfSubset):
@@ -118,22 +119,24 @@ def download_pdsi(
     """
     logger.info("Downloading Palmer Drought Severity Index data...")
 
-    downloaded_files = 0
-
+    download_results = []
     for fy in forecast_years:
         start = datetime(fy - 1, fy_start_month, fy_start_day).strftime("%Y-%m-%d")
         end = datetime(fy, fy_end_month, fy_end_day).strftime("%Y-%m-%d")
         logger.info(f"Downloading PDSI for forecast year {fy} ({start} to {end})")
 
         out_file = DATA_ROOT / f"pdsi/FY{str(fy)}/pdsi_{start}_{end}.nc"
-        if out_file.exists():
+        if skip_existing and out_file.exists():
             if validate_netcdf4(out_file, fy_start_month, fy_end_month):
+                download_results.append(DownloadResult.SKIPPED_EXISTING)
                 continue
 
         out_file.parent.mkdir(exist_ok=True, parents=True)
-        if download_time_range(start, end, out_file):
+        result = download_time_range(start, end, out_file)
+        if result == DownloadResult.SUCCESS:
             # Validate downloaded files if new file was downloaded
             validate_netcdf4(out_file, fy_start_month, fy_end_month)
-            downloaded_files += 1
+            download_results.append(result)
 
-    logger.success(f"PDSI download complete. Downloaded {downloaded_files:,} new file(s).")
+    log_download_results(download_results)
+    logger.success("PDSI download complete.")

@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field, field_validator
 import typer
 from yaml import safe_load
 
+from wsfr_download.cdec import download_cdec
+from wsfr_download.cpc_outlooks import download_cpc_outlooks
 from wsfr_download.grace_indicators import download_grace_indicators
 from wsfr_download.mjo import download_mjo
 from wsfr_download.nino_regions_sst import download_nino_regions_sst
@@ -28,7 +30,9 @@ app = typer.Typer(
 
 # Registry mapping data source keywords to respective download functions
 DATA_SOURCE_TO_FUNCTION = {
+    "cdec": download_cdec,
     "usgs_streamflow": download_usgs_streamflow,
+    "cpc_outlooks": download_cpc_outlooks,
     "grace_indicators": download_grace_indicators,
     "mjo": download_mjo,
     "nino_regions_sst": download_nino_regions_sst,
@@ -62,6 +66,7 @@ class BulkConfig(BaseModel):
     """Data model for YAML-based configuration file for the `bulk` download command."""
 
     forecast_years: list[int]
+    skip_existing: bool
     data_sources: list[DataSourceConfig]
 
 
@@ -86,9 +91,17 @@ def bulk(config: Annotated[Path, typer.Argument(help="Path to config file.")]):
     for data_source_config in bulk_config.data_sources:
         fn = DATA_SOURCE_TO_FUNCTION[data_source_config.name]
         try:
-            fn(forecast_years=bulk_config.forecast_years, **data_source_config.kwargs)
-        except TypeError:
-            fn(**data_source_config.kwargs)
+            fn(
+                forecast_years=bulk_config.forecast_years,
+                skip_existing=bulk_config.skip_existing,
+                **data_source_config.kwargs,
+            )
+        except TypeError as exc:
+            if "got an unexpected keyword argument 'forecast_years'" in str(exc):
+                # Teleconnection download function that doesn't require specifying years
+                fn(skip_existing=bulk_config.skip_existing, **data_source_config.kwargs)
+            else:
+                raise
     logger.success("Bulk download complete.")
 
 

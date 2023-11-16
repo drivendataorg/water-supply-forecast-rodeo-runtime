@@ -13,7 +13,6 @@ See the challenge website for more about this approved data source:
 https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/page/801/#usgs-streamflow
 """
 
-from functools import lru_cache
 from typing import Annotated
 
 from dataretrieval import nwis
@@ -23,7 +22,7 @@ from tqdm import tqdm
 import typer
 
 from wsfr_download.config import DATA_ROOT
-from wsfr_download.utils import site_metadata
+from wsfr_download.utils import DownloadResult, log_download_results, site_metadata
 
 MEAN_DISCHARGE_RAW_COL = "00060_Mean"
 
@@ -73,6 +72,7 @@ def download_usgs_streamflow(
     fy_start_day: Annotated[int, typer.Option(help="Forecast year start day.")] = 1,
     fy_end_month: Annotated[int, typer.Option(help="Forecast year end month.")] = 7,
     fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 21,
+    skip_existing: Annotated[bool, typer.Option(help="Whether to skip an existing file.")] = True,
 ):
     """Download daily mean streamflow data from USGS streamgages located at the forecast sites in
     the challenge. The data is downloaded from the USGS Daily Values Service. Each forecast year's
@@ -85,13 +85,17 @@ def download_usgs_streamflow(
     """
     logger.info(f"Downloading USGS streamflow data for forecast years {forecast_years}")
     sites_with_usgs = site_metadata()[site_metadata()["usgs_id"].notna()].index.values
-    counter = 0
+    all_download_results = []
     for forecast_year in forecast_years:
         logger.info(f"Downloading for FY {forecast_year}...")
         fy_dir = DATA_ROOT / "usgs_streamflow" / f"FY{forecast_year}"
         fy_dir.mkdir(exist_ok=True, parents=True)
 
         for site_id in tqdm(sites_with_usgs):
+            out_file = fy_dir / f"{site_id}.csv"
+            if skip_existing and out_file.exists():
+                all_download_results.append(DownloadResult.SKIPPED_EXISTING)
+                continue
             usgs_id = site_metadata().loc[site_id, "usgs_id"]
             df = get_daily_values_for_usgs_site(
                 usgs_id=usgs_id,
@@ -103,7 +107,10 @@ def download_usgs_streamflow(
             )
             # Sometimes there is no data, e.g., american_river_folsom_lake 11446220 for 2009
             if not df.empty and has_discharge_col(df):
-                df.to_csv(fy_dir / f"{site_id}.csv")
-                counter += 1
+                df.to_csv(out_file)
+                all_download_results.append(DownloadResult.SUCCESS)
+            else:
+                all_download_results.append(DownloadResult.SKIPPED_NO_DATA)
 
-    logger.success(f"Downloaded {counter} data files for USGS streamflow.")
+    log_download_results(all_download_results)
+    logger.success("USGS streamflow download complete.")

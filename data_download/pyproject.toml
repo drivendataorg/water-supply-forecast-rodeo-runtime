@@ -19,6 +19,7 @@ dependencies = [
   "pydantic",
   "pyyaml",
   "requests",
+  "stamina",
   "tqdm",
   "typer",
   "zeep",
