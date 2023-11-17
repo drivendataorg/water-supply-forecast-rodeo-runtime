@@ -2,8 +2,8 @@
 
 ## November 17, 2023
 
-- Added data download code for CDEC snow monitoring stations (`cdec`)
-- Added data download and data reading code for CPC Seasonal Outlooks (`cpc_outlooks`)
+- Added data download code for CDEC snow monitoring stations (`cdec`). This depends on the `cdec_snow_stations.csv` file added to the [data download page](https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/data/).
+- Added data download and data reading code for CPC Seasonal Outlooks (`cpc_outlooks`). An additional file `cpc_climate_divisions.gpkg` file has been added to the [data download page](https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/data/).
 - Added retries to the SNOTEL station download code to improve reliability
 - Added `skip_existing` option to all download functions to control whether files that already exist should be skipped. All download functions now skip existing files by default. To force downloads to overwrite existing files, set this to `false` in the bulk download config file when using `bulk`, or use the `--no-skip-existing` flag when using individual data source download commands.
 
