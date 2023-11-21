@@ -1,5 +1,9 @@
 # Changelog
 
+## November 21, 2023
+
+- Added `requests.exceptions.ConnectionError` to the retry conditions for `wsfr_download.cdec.download_station_data`
+
 ## November 17, 2023
 
 - Added data download code for CDEC snow monitoring stations (`cdec`). This depends on the `cdec_snow_stations.csv` file added to the [data download page](https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/data/).

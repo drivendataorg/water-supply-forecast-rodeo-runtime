@@ -94,7 +94,7 @@ def _get_session() -> requests.Session:
 
 
 @stamina.retry(
-    on=requests.exceptions.ConnectTimeout,
+    on=(requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError),
     attempts=5,
     wait_initial=10.0,
     wait_max=60.0,
