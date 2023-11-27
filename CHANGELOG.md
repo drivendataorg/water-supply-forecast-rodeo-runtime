@@ -1,5 +1,10 @@
 # Changelog
 
+## November 27, 2023
+
+- Added data download code for MODIS vegetation indices (`modis_vegetation`).
+- Changed `cdec` download code for improved reliability. It now downloads data for large batches of stations (instead of individually) in order to reduce the number of network calls to CDEC servers.
+
 ## November 21, 2023
 
 - Added `requests.exceptions.ConnectionError` to the retry conditions for `wsfr_download.cdec.download_station_data`

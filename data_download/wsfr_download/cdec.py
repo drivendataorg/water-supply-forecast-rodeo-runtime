@@ -13,9 +13,7 @@ https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-de
 """
 
 from datetime import datetime
-import functools
 from pathlib import Path
-import threading
 from typing import Annotated, Sequence
 
 import geopandas as gpd
@@ -24,12 +22,13 @@ import pandas as pd
 import requests
 from shapely.geometry import Point
 import stamina
-from tqdm.contrib.concurrent import thread_map
+from tqdm import tqdm
 import typer
 
 from wsfr_download.config import DATA_ROOT
 from wsfr_download.utils import (
     DownloadResult,
+    batched,
     log_download_results,
     site_geospatial,
     site_geospatial_buffered,
@@ -83,16 +82,6 @@ def process_cdec_station_metadata() -> gpd.GeoDataFrame:
     return cdec_gdf
 
 
-thread_local = threading.local()
-
-
-def _get_session() -> requests.Session:
-    """Utility for creating one requests session per thread."""
-    if not hasattr(thread_local, "session"):
-        thread_local.session = requests.Session()
-    return thread_local.session
-
-
 @stamina.retry(
     on=(requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError),
     attempts=5,
@@ -101,20 +90,22 @@ def _get_session() -> requests.Session:
     wait_exp_base=1.5,
     timeout=None,
 )
-def download_station_data(
-    station_id: str,
+def download_sensor_data(
+    station_ids: Sequence[str],
     start_date: datetime.date,
     end_date: datetime.date,
     out_dir: Path,
     skip_existing: bool,
     sensor_numbers: Sequence[int] = SENSOR_NUMBERS,
-) -> DownloadResult:
-    """Download CDEC data for a specified time range, list of sensors, and station.
-    For an explanation of the available sensor numbers, see:
+    session: requests.Session | None = None,
+) -> list[DownloadResult]:
+    """Download CDEC data for a list of stations, specified time range, and list
+    of sensors. For an explanation of the available sensor numbers, see:
     https://cdec.water.ca.gov/misc/senslist.html
 
     Args:
-        station_id (str): Three-character station ID
+        station_ids (Sequence[str]): Three-character station IDs to download
+            data for
         start_date (datetime.date): Start date
         end_date (datetime.date): End date
         skip_existing (bool): Whether to skip existing files
@@ -123,35 +114,57 @@ def download_station_data(
         out_dir (Path): Where to save the dataframe. Data will be saved to
             out_dir / {station_id}.csv
     """
-    out_file = out_dir / f"{station_id}.csv"
-    if skip_existing and out_file.exists():
-        return DownloadResult.SKIPPED_EXISTING
+    results = []
+    if skip_existing:
+        existing_station_ids = {p.stem for p in out_dir.glob("*.csv")}
+        results += [
+            DownloadResult.SKIPPED_EXISTING for _ in set(station_ids) & existing_station_ids
+        ]
+        station_ids = set(station_ids) - existing_station_ids
+        if len(station_ids) == 0:
+            return results
+    station_ids = sorted(station_ids)
 
+    stations = "%2C".join(sid for sid in station_ids)
     start = start_date.strftime("%Y-%m-%d")
     end = end_date.strftime("%Y-%m-%d")
-    sensors = "%2C".join([str(sensor) for sensor in sensor_numbers])
+    sensors = "%2C".join(str(sensor) for sensor in sensor_numbers)
 
-    url = f"https://cdec.water.ca.gov/dynamicapp/req/JSONDataServlet?Stations={station_id}"
+    url = f"https://cdec.water.ca.gov/dynamicapp/req/JSONDataServlet?Stations={stations}"
     url += f"&dur_code=d&SensorNums={sensors}&Start={start}&End={end}"
 
-    session = _get_session()
-    r = session.get(url)
-    station_data = pd.json_normalize(r.json())
-    if len(station_data) == 0:
-        return DownloadResult.SKIPPED_NO_DATA
+    session = session or requests.Session()
+    resp = session.get(url)
+    resp.raise_for_status()
+    all_data_df = pd.json_normalize(resp.json())
+    if all_data_df.shape[0] == 0:
+        results += [DownloadResult.SKIPPED_NO_DATA for _ in station_ids]
+        return results
+    else:
+        all_data_df = all_data_df.set_index("stationId")
 
-    station_data.to_csv(out_file, index=False)
+    for station_id in station_ids:
+        try:
+            this_station_df = all_data_df.loc[station_id].copy()
+            out_file = out_dir / f"{station_id}.csv"
+            this_station_df.to_csv(out_file)
+            results.append(DownloadResult.SUCCESS)
 
-    # Check for anomalies in station data
-    if station_data[["stationId", "SENSOR_NUM", "date", "value"]].isna().any().any():
-        logger.warning(f"There are missing values in {out_file}")
-    station_data["date"] = pd.to_datetime(station_data.date)
-    if (station_data.date.min() < start_date) or (station_data.date.max() > end_date):
-        logger.warning(f"There are unexpected dates in {out_file}")
-    if station_data[["stationId", "date", "SENSOR_NUM"]].duplicated().any():
-        logger.warning(f"There is duplicate data (date + sensor) in {out_file}")
+            # Check for anomalies in station data
+            if this_station_df[["SENSOR_NUM", "date", "value"]].isna().any().any():
+                logger.warning(f"There are missing values for {station_id}")
+            this_station_df["date"] = pd.to_datetime(this_station_df.date)
+            if (this_station_df.date.min() < start_date) or (
+                this_station_df.date.max() > end_date
+            ):
+                logger.warning(f"There are unexpected dates for {station_id}")
+            if this_station_df[["stationId", "date", "SENSOR_NUM"]].duplicated().any():
+                logger.warning(f"There is duplicate data (date + sensor) for {station_id}")
 
-    return DownloadResult.SUCCESS
+        except KeyError:
+            results.append(DownloadResult.SKIPPED_NO_DATA)
+
+    return results
 
 
 def find_nearby_cdec_stations() -> list[str]:
@@ -220,30 +233,29 @@ def download_cdec(
     nearby_cdec_stations = find_nearby_cdec_stations()
 
     all_download_results = []
-    for fy in forecast_years:
-        fy_start = datetime(fy - 1, fy_start_month, fy_start_day)
-        fy_end = datetime(fy, fy_end_month, fy_end_day)
-        fy_dir = CDEC_DIR / f"FY{fy}"
-        fy_dir.mkdir(exist_ok=True, parents=True)
+    with requests.Session() as session:
+        for fy in forecast_years:
+            fy_start = datetime(fy - 1, fy_start_month, fy_start_day)
+            fy_end = datetime(fy, fy_end_month, fy_end_day)
+            fy_dir = CDEC_DIR / f"FY{fy}"
+            fy_dir.mkdir(exist_ok=True, parents=True)
 
-        logger.info(
-            f"Downloading forecast year {fy} "
-            f"({fy_start.strftime('%Y-%m-%d')} to {fy_end.strftime('%Y-%m-%d')})"
-        )
+            logger.info(
+                f"Downloading forecast year {fy} "
+                f"({fy_start.strftime('%Y-%m-%d')} to {fy_end.strftime('%Y-%m-%d')})"
+            )
 
-        download_results = thread_map(
-            functools.partial(
-                download_station_data,
-                start_date=fy_start,
-                end_date=fy_end,
-                out_dir=fy_dir,
-                skip_existing=skip_existing,
-            ),
-            nearby_cdec_stations,
-            total=len(nearby_cdec_stations),
-            chunksize=1,
-        )
-        all_download_results += download_results
+            batches = list(batched(nearby_cdec_stations, 100))
+            for batch in tqdm(batches):
+                download_results = download_sensor_data(
+                    station_ids=batch,
+                    start_date=fy_start,
+                    end_date=fy_end,
+                    out_dir=fy_dir,
+                    skip_existing=skip_existing,
+                    session=session,
+                )
+                all_download_results += download_results
 
     log_download_results(all_download_results)
     logger.success("CDEC download complete.")

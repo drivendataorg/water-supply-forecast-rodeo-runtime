@@ -32,7 +32,6 @@ from pathlib import Path
 from typing import Annotated
 
 from loguru import logger
-import numpy as np
 import pandas as pd
 import requests
 from tqdm.contrib.concurrent import thread_map

@@ -15,8 +15,6 @@ DATA_ROOT = Path(os.getenv("WSFR_DATA_ROOT", Path.cwd() / "data"))
 METADATA_FILE = DATA_ROOT / "metadata.csv"
 GEOSPATIAL_FILE = DATA_ROOT / "geospatial.gpkg"
 
-logger.info(f"DATA_ROOT is {DATA_ROOT}")
-
 
 def log_stamina_retries(details: stamina.instrumentation.RetryDetails):
     """Stamina retry hook to log scheduled retry with loguru logger."""

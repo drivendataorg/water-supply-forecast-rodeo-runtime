@@ -1,5 +1,6 @@
 import enum
-from functools import lru_cache
+from functools import cache
+import itertools
 
 import geopandas as gpd
 from loguru import logger
@@ -12,14 +13,14 @@ from wsfr_download.config import GEOSPATIAL_FILE, METADATA_FILE
 DEFAULT_DRAINAGE_BASIN_BUFFER = 64_373.8
 
 
-@lru_cache
+@cache
 def site_metadata():
     """Load competition metadata.csv file with site metadata."""
     metadata_df = pd.read_csv(METADATA_FILE, index_col="site_id", dtype={"usgs_id": "string"})
     return metadata_df
 
 
-@lru_cache
+@cache
 def site_geospatial(layer: str):
     """Load competition geospatial.gpkg file with site polygons."""
     return gpd.read_file(GEOSPATIAL_FILE, layer=layer)
@@ -62,3 +63,15 @@ def log_download_results(results: list[DownloadResult], *args: str):
         + args
     )
     logger.info(msg)
+
+
+def batched(iterable, n: int) -> tuple:
+    """Based on suggested equivalent code for itertools.batched from Python 3.12
+    https://docs.python.org/3/library/itertools.html#itertools.batched
+    """
+    # batched('ABCDEFG', 3) --> ABC DEF G
+    if n < 1:
+        raise ValueError("n must be at least one")
+    it = iter(iterable)
+    while batch := tuple(itertools.islice(it, n)):
+        yield batch

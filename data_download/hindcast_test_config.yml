@@ -26,3 +26,5 @@ data_sources:
   - name: pdo
   - name: pna
   - name: soi
+  # Vegetation
+  - name: modis_vegetation

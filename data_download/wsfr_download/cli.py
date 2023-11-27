@@ -7,9 +7,11 @@ import typer
 from yaml import safe_load
 
 from wsfr_download.cdec import download_cdec
+from wsfr_download.config import DATA_ROOT
 from wsfr_download.cpc_outlooks import download_cpc_outlooks
 from wsfr_download.grace_indicators import download_grace_indicators
 from wsfr_download.mjo import download_mjo
+from wsfr_download.modis_vegetation import download_modis_vegetation
 from wsfr_download.nino_regions_sst import download_nino_regions_sst
 from wsfr_download.oni import download_oni
 from wsfr_download.pdo import download_pdo
@@ -28,6 +30,13 @@ app = typer.Typer(
     )
 )
 
+
+@app.callback()
+def data_root_callback():
+    """Callback to log location of data root directory."""
+    logger.info(f"DATA_ROOT is {DATA_ROOT}")
+
+
 # Registry mapping data source keywords to respective download functions
 DATA_SOURCE_TO_FUNCTION = {
     "cdec": download_cdec,
@@ -35,6 +44,7 @@ DATA_SOURCE_TO_FUNCTION = {
     "cpc_outlooks": download_cpc_outlooks,
     "grace_indicators": download_grace_indicators,
     "mjo": download_mjo,
+    "modis_vegetation": download_modis_vegetation,
     "nino_regions_sst": download_nino_regions_sst,
     "oni": download_oni,
     "pdo": download_pdo,
