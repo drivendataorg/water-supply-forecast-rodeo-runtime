@@ -1,0 +1,12 @@
+waterservices.usgs.gov
+data.usbr.gov
+wcc.sc.egov.usda.gov
+cdec.water.ca.gov
+data.rcc-acis.org
+cds.climate.copernicus.eu
+*.copernicus-climate.eu
+hydro1.gesdisc.eosdis.nasa.gov
+downloads.psl.noaa.gov
+psl.noaa.gov
+planetarycomputer.microsoft.com
+modiseuwest.blob.core.windows.net

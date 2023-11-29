@@ -1,5 +1,5 @@
 import enum
-from functools import lru_cache
+from functools import cache
 from typing import Literal
 
 import geopandas as gpd
@@ -13,7 +13,7 @@ class Layer(str, enum.Enum):
     SITES = "sites"
 
 
-@lru_cache
+@cache
 def read_metadata() -> pd.DataFrame:
     """Load competition metadata.csv file with site metadata."""
     metadata_df = pd.read_csv(METADATA_FILE, index_col="site_id", dtype={"usgs_id": "string"})

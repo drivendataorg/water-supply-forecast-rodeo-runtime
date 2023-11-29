@@ -1,0 +1,16 @@
+93M	data/cdec
+64K	data/cdec_snow_stations.csv
+352K	data/cpc_climate_divisions.gpkg
+77M	data/cpc_outlooks
+6.2M	data/geospatial.gpkg
+1.7G	data/grace_indicators
+8.0K	data/metadata.csv
+50G	data/modis_vegetation
+913M	data/pdsi
+16K	data/smoke_submission_format.csv
+38G	data/snodas
+55M	data/snotel
+336K	data/submission_format.csv
+428K	data/teleconnections
+88K	data/test_monthly_naturalized_flow.csv
+3.4M	data/usgs_streamflow

@@ -1,5 +1,15 @@
 # Changelog
 
+## November 29, 2023
+
+- Added runtime items to the repository.
+    - Runtime image specification in [`runtime/`](./runtime/)
+    - Example submission and submission template in [`examples/`](./examples/)
+    - Documentation added to [README](./README.md#testing-a-submission-locally).
+    - Firewall allowed hosts documented in [`allowed_hosts.txt`](./allowed_hosts.txt). See [documentation](./README.md/#runtime-network-access).
+- Added data directory manifest ([`data.find.txt`](./data.find.txt)) and disk usage ([`data.du.txt`](./data.du.txt)). See [documentation](./README.md/#expected-files).
+- Added `read_test_monthly_naturalized_flow` function to `data_reading` that loads the monthly naturalized flow time series for a particular site and issue date.
+
 ## November 27, 2023
 
 - Added data download code for MODIS vegetation indices (`modis_vegetation`).

@@ -1,0 +1,106 @@
+{
+  "hungry_horse_reservoir_inflow": {
+    "mean": 2208.6086999999998,
+    "std": 417.17936304798474
+  },
+  "snake_r_nr_heise": {
+    "mean": 3167.2047,
+    "std": 680.3513722960528
+  },
+  "pueblo_reservoir_inflow": {
+    "mean": 270.36580000000004,
+    "std": 90.95894257032185
+  },
+  "sweetwater_r_nr_alcova": {
+    "mean": 42.4154,
+    "std": 23.797138979297486
+  },
+  "missouri_r_at_toston": {
+    "mean": 1845.8351000000002,
+    "std": 591.8934122781924
+  },
+  "animas_r_at_durango": {
+    "mean": 307.17539999999997,
+    "std": 107.6179520053333
+  },
+  "yampa_r_nr_maybell": {
+    "mean": 833.6487000000001,
+    "std": 305.6915464443966
+  },
+  "libby_reservoir_inflow": {
+    "mean": 5690.580499999999,
+    "std": 1272.9532555792584
+  },
+  "boise_r_nr_boise": {
+    "mean": 1207.1942,
+    "std": 358.77356329021165
+  },
+  "green_r_bl_howard_a_hanson_dam": {
+    "mean": 262.02810000000005,
+    "std": 73.9541848435758
+  },
+  "taylor_park_reservoir_inflow": {
+    "mean": 76.2028,
+    "std": 27.925392140089595
+  },
+  "dillon_reservoir_inflow": {
+    "mean": 140.2292,
+    "std": 53.19161929351903
+  },
+  "ruedi_reservoir_inflow": {
+    "mean": 117.86569999999999,
+    "std": 39.837819117154375
+  },
+  "fontenelle_reservoir_inflow": {
+    "mean": 647.9645,
+    "std": 204.20594094266158
+  },
+  "weber_r_nr_oakley": {
+    "mean": 92.6819,
+    "std": 24.284593613830335
+  },
+  "san_joaquin_river_millerton_reservoir": {
+    "mean": 954.96,
+    "std": 619.4891016887311
+  },
+  "merced_river_yosemite_at_pohono_bridge": {
+    "mean": 304.67,
+    "std": 157.20049512220587
+  },
+  "american_river_folsom_lake": {
+    "mean": 1040.2500000000002,
+    "std": 618.107876686766
+  },
+  "colville_r_at_kettle_falls": {
+    "mean": 127.72139999999999,
+    "std": 53.785913408210845
+  },
+  "stehekin_r_at_stehekin": {
+    "mean": 750.0285,
+    "std": 88.33730173633082
+  },
+  "detroit_lake_inflow": {
+    "mean": 523.1583,
+    "std": 169.909812791015
+  },
+  "virgin_r_at_virtin": {
+    "mean": 36.238200000000006,
+    "std": 17.3321498236979
+  },
+  "skagit_ross_reservoir": {
+    "mean": 1414.0790000000002,
+    "std": 227.80858136455998
+  },
+  "boysen_reservoir_inflow": {
+    "mean": 608.4255,
+    "std": 270.3185490882316
+  },
+  "pecos_r_nr_pecos": {
+    "mean": 36.9323,
+    "std": 17.331715950502097
+  },
+  "owyhee_r_bl_owyhee_dam": {
+    "mean": 258.9806,
+    "std": 242.40225701332807
+  }
+}
