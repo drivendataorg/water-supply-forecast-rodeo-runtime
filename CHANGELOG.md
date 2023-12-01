@@ -1,5 +1,9 @@
 # Changelog
 
+## December 1, 2023
+
+- Fixed bug in parsing CPC Precipitation Outlooks in `wsfr_read.climate.cpc_outlooks`. This now handles the case where the 2004 file has a slightly different format.
+
 ## November 29, 2023
 
 - Added runtime items to the repository.

@@ -65,8 +65,8 @@ def _table_data_generator(
 
 TEMP_WIDTHS = (
     (
-        5,  # YEAR
-        3,  # MN
+        4,  # YEAR
+        4,  # MN
         4,  # LEAD
         4,  # CD
         5,  # R
@@ -106,8 +106,8 @@ TEMP_COLUMNS = (
 
 PRECIP_WIDTHS = (
     (
-        5,  # YEAR
-        3,  # MN
+        4,  # YEAR
+        4,  # MN
         4,  # LEAD
         4,  # CD
         5,  # R
@@ -118,7 +118,7 @@ PRECIP_WIDTHS = (
         6,  # CLIM
         7,  # FCST
         7,  # CLIM
-        5,  # POWER
+        7,  # POWER
     )
 )
 PRECIP_COLUMNS = (
@@ -147,6 +147,24 @@ PRECIP_COLUMNS = (
     "POWER",
 )
 
+PRECIP_2004_WIDTHS = (
+    (
+        4,  # YEAR
+        3,  # MN
+        3,  # LEAD
+        4,  # CD
+        5,  # R
+    )
+    + (6,) * 13  # exceedances
+    + (
+        6,  # FCST
+        6,  # CLIM
+        8,  # FCST
+        8,  # CLIM
+        8,  # POWER
+    )
+)
+
 
 def _read_outlook_for_year(
     year: int, variable: Literal["temp", "precip"] | Variable
@@ -160,7 +178,10 @@ def _read_outlook_for_year(
         widths = TEMP_WIDTHS
     elif variable == Variable.PRECIP:
         columns = PRECIP_COLUMNS
-        widths = PRECIP_WIDTHS
+        if year == 2004:
+            widths = PRECIP_2004_WIDTHS
+        else:
+            widths = PRECIP_WIDTHS
     dfs = {}
     for issue_date, buffer in table_gen:
         dfs[pd.to_datetime(issue_date)] = pd.read_fwf(
