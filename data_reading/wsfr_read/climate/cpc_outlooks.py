@@ -147,7 +147,8 @@ PRECIP_COLUMNS = (
     "POWER",
 )
 
-PRECIP_2004_WIDTHS = (
+# Some years have weird widths: 2004, 2006
+PRECIP_ALT_WIDTHS = (
     (
         4,  # YEAR
         3,  # MN
@@ -178,8 +179,8 @@ def _read_outlook_for_year(
         widths = TEMP_WIDTHS
     elif variable == Variable.PRECIP:
         columns = PRECIP_COLUMNS
-        if year == 2004:
-            widths = PRECIP_2004_WIDTHS
+        if year in {2004, 2006}:
+            widths = PRECIP_ALT_WIDTHS
         else:
             widths = PRECIP_WIDTHS
     dfs = {}

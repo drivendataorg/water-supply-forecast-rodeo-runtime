@@ -1,5 +1,9 @@
 # Changelog
 
+## December 3, 2023
+
+- Fixed bug in parsing CPC Precipitation Outlooks in `wsfr_read.climate.cpc_outlooks` to additionally handle case where 2006 also has a slightly different format.
+
 ## December 1, 2023
 
 - Fixed bug in parsing CPC Precipitation Outlooks in `wsfr_read.climate.cpc_outlooks`. This now handles the case where the 2004 file has a slightly different format.
