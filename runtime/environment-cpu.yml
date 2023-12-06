@@ -2,10 +2,11 @@ name: watersupply
 channels:
   - conda-forge
 dependencies:
+  - catboost=1.2.2
+  - geopandas=0.14.1
   - keras=2.13.1
   - lightgbm=4.1.0
   - loguru=0.7
-  - geopandas=0.14.1
   - netCDF4=1.6.5
   - numba=0.58
   - numpy=1.26.2
@@ -28,3 +29,5 @@ dependencies:
   - tqdm=4.66
   - xarray=2023.11.0
   - xgboost=1.7.6=cpu*
+  - pip:
+      - quantile-forest==1.2.3

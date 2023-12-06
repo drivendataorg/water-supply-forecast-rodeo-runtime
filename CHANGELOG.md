@@ -1,5 +1,11 @@
 # Changelog
 
+## December 6, 2023 (2)
+
+- Added the following packages to the runtime environment:
+  - catboost v1.2.2
+  - quantile-forest v1.2.3
+
 ## December 6, 2023
 
 - Fixed an issue during code execution where the mounted data drive appeared empty when scanning for files with `glob`, `listdir`, or `iterdir` due to a transient effect from mounting. The supervisor code now waits up to 30 seconds for scanning to return results before running your code.
