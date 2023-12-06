@@ -17,8 +17,8 @@ RUN apt-get update --fix-missing \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /apt.txt
 
-COPY --chown=$MAMBA_USER:$MAMBA_USER runtime/environment-${CPU_OR_GPU}.lock /tmp/env.lock
-RUN micromamba install --name base --yes --file /tmp/env.lock && \
+COPY --chown=$MAMBA_USER:$MAMBA_USER runtime/conda-lock-${CPU_OR_GPU}.yml /tmp/conda-lock.yml
+RUN micromamba install --name base --yes --file /tmp/conda-lock.yml && \
     micromamba clean --all --force-pkgs-dirs --yes
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
 

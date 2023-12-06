@@ -19,6 +19,9 @@ packages = [
     "sklearn",
     "tensorflow",
     "torch",
+    # Requested packages
+    "catboost",
+    "quantile_forest",
 ]
 
 

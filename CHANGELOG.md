@@ -1,5 +1,10 @@
 # Changelog
 
+
+## December 6, 2023 (3)
+
+- Fixed an issue that prevented quantile-forest from being correctly installed.
+
 ## December 6, 2023 (2)
 
 - Added the following packages to the runtime environment:
