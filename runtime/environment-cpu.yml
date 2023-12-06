@@ -28,3 +28,4 @@ dependencies:
   - tqdm=4.66
   - xarray=2023.11.0
   - xgboost=1.7.6=cpu*
+  - quantile-forest=1.2.3
