@@ -1,5 +1,9 @@
 # Changelog
 
+## December 6, 2023
+
+- Fixed an issue during code execution where the mounted data drive appeared empty when scanning for files with `glob`, `listdir`, or `iterdir` due to a transient effect from mounting. The supervisor code now waits up to 30 seconds for scanning to return results before running your code.
+
 ## December 3, 2023
 
 - Fixed bug in parsing CPC Precipitation Outlooks in `wsfr_read.climate.cpc_outlooks` to additionally handle case where 2006 also has a slightly different format.

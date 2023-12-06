@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from time import sleep
 from typing import Any
 
 from loguru import logger
@@ -35,9 +36,28 @@ def main():
     logger.info("IS_SMOKE: {}", IS_SMOKE)
     logger.info("src_directory: {}", src_directory)
     logger.info("data_directory: {}", data_directory)
-    assert wsfr_read.config.DATA_ROOT == data_directory
     logger.info("preprocessed_directory: {}", preprocessed_directory)
 
+    # Check that DATA_ROOT is consistent
+    assert wsfr_read.config.DATA_ROOT == data_directory
+
+    # Check that data drive is fully mounted so that scanning returns data
+    for i in range(30):
+        try:
+            next(data_directory.iterdir())
+        except StopIteration:
+            sleep(1)
+        else:
+            break
+    try:
+        next(data_directory.iterdir())
+    except StopIteration:
+        logger.error("Data directory not properly mounted after waiting 30 seconds.")
+        raise
+    else:
+        logger.info("data_directory.iterdir returned results after waiting {} seconds.", i)
+
+    # Create preprocessed directory
     try:
         preprocessed_directory.mkdir(parents=True)
     except FileExistsError:

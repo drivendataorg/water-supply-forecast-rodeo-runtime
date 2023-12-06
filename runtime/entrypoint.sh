@@ -22,9 +22,6 @@ main () {
     LOGURU_LEVEL=INFO python supervisor.py
 }
 
-# Let transient filesystem stuff settle
-sleep 5
-
 main |& tee "/code_execution/submission/log.txt"
 exit_code=${PIPESTATUS[0]}
 
