@@ -29,5 +29,10 @@ dependencies:
   - tqdm=4.66
   - xarray=2023.11.0
   - xgboost=1.7.6=cpu*
+  - salem=0.3.9
+  - cdsapi=0.6.1
+  - richdem=0.3.4
+  - gdal=3.0.2
+  - joblib=1.3.2
   - pip:
       - quantile-forest==1.2.3
