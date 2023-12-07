@@ -28,6 +28,7 @@ dependencies:
   - statsmodels=0.14.0
   - tensorflow=2.13.1=cuda112*
   - tqdm=4.66
+  - torch=2.1.1
   - xarray=2023.11.0
   - xgboost=1.7.6=cuda112*
   - pip:
