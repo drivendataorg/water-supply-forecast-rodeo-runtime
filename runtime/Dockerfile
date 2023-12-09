@@ -1,4 +1,4 @@
-FROM mambaorg/micromamba:bookworm-slim
+FROM --platform=linux/amd64 mambaorg/micromamba:1.5.3-bookworm-slim
 
 USER root
 

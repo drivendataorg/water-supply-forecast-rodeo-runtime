@@ -1,5 +1,20 @@
 # Changelog
 
+## December 8, 2023
+
+- Adds the following dependencies to the runtime image:
+    - cdsapi v0.6.1
+    - fiona v1.9.5
+    - imbalanced-learn v0.11.0
+    - mapie v0.7.0
+    - pygrib v2.1.5
+    - pykrige v1.7.1
+    - pyproj v3.6.1
+    - joblib v1.3.2
+    - salem v0.3.9
+    - shapely v2.0.2
+    - xagg v0.3.1
+- Fixed bug when building on Apple Silicon Macs by explicitly specifying `--platform=linux/amd64` in Dockerfile.
 
 ## December 6, 2023 (3)
 
