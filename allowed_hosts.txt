@@ -2,6 +2,7 @@ waterservices.usgs.gov
 data.usbr.gov
 wcc.sc.egov.usda.gov
 cdec.water.ca.gov
+climate.arizona.edu
 data.rcc-acis.org
 cds.climate.copernicus.eu
 *.copernicus-climate.eu
@@ -10,3 +11,4 @@ downloads.psl.noaa.gov
 psl.noaa.gov
 planetarycomputer.microsoft.com
 modiseuwest.blob.core.windows.net
+elevationeuwest.blob.core.windows.net

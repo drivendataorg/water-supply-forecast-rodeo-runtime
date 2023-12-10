@@ -1,8 +1,20 @@
 # Changelog
 
+## December 9, 2023
+
+- Added the following dependencies to the runtime image:
+    - esda v2.5.1
+    - giddy v2.3.4
+    - libpysal v4.9.2
+    - pointpats v2.4.0
+    - spreg v1.4.2
+- Added the following hosts to the firewall whitelist ([`allowed_hosts.txt`](./allowed_hosts.txt))
+    - University of Arizona file server for [UA/SWANN](https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/page/801/#uaswann) (`climate.arizona.edu`)
+    - Storage Account for [Copernicus DEM GLO-90](https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/page/801/#copernicus-dem-glo-90) (`elevationeuwest.blob.core.windows.net`)
+
 ## December 8, 2023
 
-- Adds the following dependencies to the runtime image:
+- Added the following dependencies to the runtime image:
     - cdsapi v0.6.1
     - fiona v1.9.5
     - imbalanced-learn v0.11.0
