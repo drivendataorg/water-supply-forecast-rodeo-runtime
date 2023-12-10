@@ -24,6 +24,7 @@ dependencies:
   - pyproj=3.6.1
   - pysal=23.7
   - pystac=1.9.0
+  - pystac_client=0.7.5
   - pytest=7.4
   - python=3.10.13
   - pytorch=1.13.1=cpu*
