@@ -1,5 +1,11 @@
 # Changelog
 
+## December 10, 2023
+
+- Added the following dependencies to the runtime image:
+    - gdal v3.7.3 (was previously implicitly included, now pinned explicitly)
+    - richdem v2.3.0
+
 ## December 9, 2023
 
 - Added the following dependencies to the runtime image:

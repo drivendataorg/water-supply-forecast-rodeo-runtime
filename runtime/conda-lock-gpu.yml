@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 5869e83848d8f7e94e6671b5e7d64bb17e71214c9831e3b64b4ce1bb729f83c8
+    linux-64: 487a4f085747181efc99e0f7e8e8181a42c1182a83ac63e7da101f5409b8fdac
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -4367,6 +4367,25 @@ package:
   hash:
     md5: 61b279f051eef9c89d58f4d813e75e04
     sha256: 889e3c1b84467b64046776db95dc4c5ea4dad5afaa5ec18ad811bd95c63286b0
+  category: main
+  optional: false
+- name: richdem
+  version: 2.3.0
+  manager: conda
+  platform: linux-64
+  dependencies:
+    __glibc: '>=2.17,<3.0.a0'
+    libgcc-ng: '>=12'
+    libgdal: '>=3.7.2,<3.8.0a0'
+    libstdcxx-ng: '>=12'
+    numpy: '>=1.22.4,<2.0a0'
+    python: '>=3.10,<3.11.0a0'
+    python_abi: 3.10.*
+    setuptools: ''
+  url: https://conda.anaconda.org/conda-forge/linux-64/richdem-2.3.0-py310h7631d76_6.conda
+  hash:
+    md5: 93dadb2184d019b7fdc72b74e2d8971b
+    sha256: 53113f66d887060ee330feb60cc58d91d3f6dc2cfe5183c5eeeaf09ab3a285f1
   category: main
   optional: false
 - name: scikit-learn
