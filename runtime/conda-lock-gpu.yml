@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: e964ae67f6f88e7fda02ea5fd71d3488cc5bdd315cc01ef7e0148292c2f1d187
+    linux-64: b98d74ac61857e35947955c60f733cf58441cc103de446f5f0776136b9a55245
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -638,11 +638,11 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    libgcc-ng: '>=10.3.0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libiconv-1.17-h166bdaf_0.tar.bz2
+    libgcc-ng: '>=12'
+  url: https://conda.anaconda.org/conda-forge/linux-64/libiconv-1.17-hd590300_1.conda
   hash:
-    md5: b62b52da46c39ee2bc3c162ac7f1804d
-    sha256: 6a81ebac9f1aacdf2b4f945c87ad62b972f0f69c8e0981d68e111739e6720fd7
+    md5: 4b06b43d0eca61db2899e4d7a289c302
+    sha256: a9364735ef2542558ed59aa5f404707dab674df465cbdf312edeaf5e827b55ed
   category: main
   optional: false
 - name: libjpeg-turbo
@@ -5123,10 +5123,10 @@ package:
     python: '>=3.10,<3.11.0a0'
     python_abi: 3.10.*
     scipy: '!=1.9.2,>=1.4'
-  url: https://conda.anaconda.org/conda-forge/linux-64/statsmodels-0.14.0-py310h1f7b6fc_2.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/statsmodels-0.14.0-py310h1f7b6fc_3.conda
   hash:
-    md5: bf18bdffeee7e1ec68d536650f242092
-    sha256: c3953fec53bbf80309a38088bb103df4a21d13b766319b6a3bd4a5038a8fb7bf
+    md5: fc27f350905658ace8509492e072441e
+    sha256: d3f49a334b8c9a6a1738c4b04c61da371c05013aab135acd6a4b7b8e51d9722d
   category: main
   optional: false
 - name: torchmetrics
@@ -5506,17 +5506,17 @@ package:
   category: main
   optional: false
 - name: r-cli
-  version: 3.6.1
+  version: 3.6.2
   manager: conda
   platform: linux-64
   dependencies:
     libgcc-ng: '>=12'
     libstdcxx-ng: '>=12'
     r-base: '>=4.3,<4.4.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/r-cli-3.6.1-r43ha503ecb_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/r-cli-3.6.2-r43ha503ecb_0.conda
   hash:
-    md5: ff00e85e687f98d8f30ec766b3216a85
-    sha256: 0787882ea1869d1749e4ff185406673a020b483f5069653ab55f0a491b3b7d19
+    md5: 7a325f68b1354c1a5261688b5e54d008
+    sha256: 1e5502e8d54506a6aa841b55227a58059a7a5fbd89eaabc8b753ea9506ec684c
   category: main
   optional: false
 - name: r-clipr

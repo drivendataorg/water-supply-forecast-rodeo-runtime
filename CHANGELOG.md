@@ -1,5 +1,14 @@
 # Changelog
 
+## December 11, 2023 (2)
+
+- Added the following R dependencies to the runtime image:
+    - r-dplyr v1.1.4
+    - r-tidyr v1.3.0
+    - r-lubridate v1.9.3
+    - r-readr v2.1.4
+    - r-stringr v1.5.1
+
 ## December 11, 2023
 
 - Added the following R dependencies to the runtime image:
