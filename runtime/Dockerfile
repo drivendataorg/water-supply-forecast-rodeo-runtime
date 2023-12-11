@@ -22,7 +22,7 @@ RUN micromamba install --name base --yes --file /tmp/conda-lock.yml && \
     micromamba clean --all --force-pkgs-dirs --yes
 ARG MAMBA_DOCKERFILE_ACTIVATE=1
 
-RUN mkdir -p /code_execution/predictions
+RUN mkdir -p /code_execution
 RUN chown -R ${MAMBA_USER}:${MAMBA_USER} /code_execution
 
 COPY data_reading /data_reading

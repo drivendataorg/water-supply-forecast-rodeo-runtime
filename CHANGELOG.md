@@ -1,5 +1,29 @@
 # Changelog
 
+## December 11, 2023
+
+- Added the following R dependencies to the runtime image:
+    - r-base v4.3.2
+    - r-plyr v1.8.9
+    - r-terra v1.7
+    - r-sf v1.0
+    - r-zoo v1.8
+    - r-doparallel v1.0.17
+    - r-foreach v1.5.2
+    - r-iterators v1.0.14
+    - r-nlme v3.1
+    - r-mgcv v1.9
+    - r-qgam v1.3.4
+    - r-modelr v0.1.11
+    - r-missmda v1.19
+    - r-mvtnorm v1.2
+    - r-mice v3.16.0
+    - r-factominer v2.9
+    - r-matrix v1.6
+    - r-rcpp v1.0.11
+    - r-dataretrieval v2.7.14
+- Pins pystac-client v0.7.5
+
 ## December 10, 2023
 
 - Added the following dependencies to the runtime image:
