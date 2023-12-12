@@ -1,5 +1,9 @@
 # Changelog
 
+## December 11, 2023 (3)
+
+- Changed xagg to v0.3.1.1
+
 ## December 11, 2023 (2)
 
 - Added the following R dependencies to the runtime image:

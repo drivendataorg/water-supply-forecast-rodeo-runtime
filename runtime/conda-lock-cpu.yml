@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 1cf7e88320427ce07fa24e699795d0c2414ad7ca4b01a7af3f93cd33f4ed56ce
+    linux-64: 6694c421d5207d7f7b307520d95a28c08f537f631d58b58785dfe3f564f2d3e3
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -2288,15 +2288,15 @@ package:
   category: main
   optional: false
 - name: fsspec
-  version: 2023.12.1
+  version: 2023.12.2
   manager: conda
   platform: linux-64
   dependencies:
     python: '>=3.8'
-  url: https://conda.anaconda.org/conda-forge/noarch/fsspec-2023.12.1-pyhca7485f_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/fsspec-2023.12.2-pyhca7485f_0.conda
   hash:
-    md5: b38946846cdf39f9bce93f75f571d913
-    sha256: 929e63a5916a8ebc50199d5404fdcedf75261580d8e229d9a1def57a05ef39eb
+    md5: bf40f2a8835b78b1f91083d306b493d2
+    sha256: 9269a5464698e0fde1f9c78544552817370c26df86e2a5a7518544b6a55ae8ee
   category: main
   optional: false
 - name: gast
@@ -5868,16 +5868,16 @@ package:
   category: main
   optional: false
 - name: r-matrixstats
-  version: 1.1.0
+  version: 1.2.0
   manager: conda
   platform: linux-64
   dependencies:
     libgcc-ng: '>=12'
     r-base: '>=4.3,<4.4.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/r-matrixstats-1.1.0-r43h57805ef_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/r-matrixstats-1.2.0-r43h57805ef_0.conda
   hash:
-    md5: 8e1fa2ecdf7149c7a3e364ded0da4bf9
-    sha256: 97d96fe4d60e12c262f55d70b820f716af2677ec56af4ef865324f304d7a4a64
+    md5: 8a708507ecb9a58beb5d849fe4cabf00
+    sha256: fe39b0d94876541b83311cfdc45cc7bd800b792791ed0d1acb245fb924e98aae
   category: main
   optional: false
 - name: r-mime
@@ -6187,7 +6187,7 @@ package:
   category: main
   optional: false
 - name: r-stringi
-  version: 1.8.2
+  version: 1.8.3
   manager: conda
   platform: linux-64
   dependencies:
@@ -6195,10 +6195,10 @@ package:
     libgcc-ng: '>=12'
     libstdcxx-ng: '>=12'
     r-base: '>=4.3,<4.4.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/r-stringi-1.8.2-r43h9facbd6_0.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/r-stringi-1.8.3-r43h9facbd6_0.conda
   hash:
-    md5: d737ae308cad6093f3b5b9447c3f7cca
-    sha256: d14da0f7fe00f5eb33b6c220b8788cee868e47582bbfec0ba9e892b27dabdd58
+    md5: b39b29e195407633de68288a3c0ca54d
+    sha256: 644881609fee9d821b0e6493dff51e68504ba38e9648c1ff1bd5dfbb2099a2da
   category: main
   optional: false
 - name: r-sys
@@ -6318,16 +6318,16 @@ package:
   category: main
   optional: false
 - name: r-yaml
-  version: 2.3.7
+  version: 2.3.8
   manager: conda
   platform: linux-64
   dependencies:
     libgcc-ng: '>=12'
     r-base: '>=4.3,<4.4.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/r-yaml-2.3.7-r43h57805ef_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/r-yaml-2.3.8-r43h57805ef_0.conda
   hash:
-    md5: 8411fb41f7a2a0c558f20b2949724562
-    sha256: a5a61ffedaaf69da7eee9e2f618f410c69b49fadb2fa98c5d216dc485de2f7b2
+    md5: 41db1ee9d0073339e681379b92e7dfb6
+    sha256: 0a71cad7158d5785e0e3dff6cbb726dc5391c1d232c68cf3a590202af32b3330
   category: main
   optional: false
 - name: rioxarray
@@ -7383,7 +7383,7 @@ package:
   category: main
   optional: false
 - name: xagg
-  version: 0.3.1
+  version: 0.3.1.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -7400,10 +7400,10 @@ package:
     shapely: ''
     xarray: ''
     xesmf: '>=0.7.1'
-  url: https://conda.anaconda.org/conda-forge/noarch/xagg-0.3.1-pyhd8ed1ab_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/xagg-0.3.1.1-pyhd8ed1ab_0.conda
   hash:
-    md5: a6a5ca73dfdc08cf74b759412bac779c
-    sha256: c71c313827cfea5ca2bfd3a100d5747266ff4083ad919aae3f02feec7a4ea8ad
+    md5: 6dc2e24d1b91bef35bf315e369c7a7cb
+    sha256: 1468c0973e598af6fcaa8f8852566c7756b8f58e2f209e247143c4e1adb1d922
   category: main
   optional: false
 - name: esda
