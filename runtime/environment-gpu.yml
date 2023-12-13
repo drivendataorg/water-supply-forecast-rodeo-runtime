@@ -4,6 +4,7 @@ channels:
 dependencies:
   - catboost=1.2.2
   - cdsapi=0.6.1
+  - dataretrieval=1.0.6
   - cudatoolkit=11.2
   - esda=2.5.1
   - fiona=1.9.5

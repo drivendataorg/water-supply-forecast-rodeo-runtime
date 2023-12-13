@@ -1,5 +1,9 @@
 # Changelog
 
+## December 12, 2023
+
+- Added dataretrieval v1.0.6 to the runtime image.
+
 ## December 11, 2023 (3)
 
 - Changed xagg to v0.3.1.1

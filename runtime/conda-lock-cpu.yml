@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: 6694c421d5207d7f7b307520d95a28c08f537f631d58b58785dfe3f564f2d3e3
+    linux-64: ad7e25f898825b09b27a8529617c2c2339b43c210f9b0dc7a7d39d45c4b226bf
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -4598,6 +4598,20 @@ package:
     sha256: 2f44eaea9d88203f400229c3247575dd8ea7c20907cc6ea2e2d859f43c395141
   category: main
   optional: false
+- name: dataretrieval
+  version: 1.0.6
+  manager: conda
+  platform: linux-64
+  dependencies:
+    pandas: ''
+    python: '>=3.6'
+    requests: ''
+  url: https://conda.anaconda.org/conda-forge/noarch/dataretrieval-1.0.6-pyhd8ed1ab_0.conda
+  hash:
+    md5: cdcdd4fb886211b8b3e8a11357c85b7c
+    sha256: 10cfd0687cfcc9b47365532b17ae6387c833f150efb8b75ffbd5f3a456e34b30
+  category: main
+  optional: false
 - name: eccodes
   version: 2.32.1
   manager: conda
@@ -4700,17 +4714,17 @@ package:
   manager: conda
   platform: linux-64
   dependencies:
-    atk-1.0: '>=2.36.0'
-    cairo: '>=1.16.0,<2.0.0a0'
-    gdk-pixbuf: '>=2.42.6,<3.0a0'
-    gettext: '>=0.19.8.1,<1.0a0'
-    libgcc-ng: '>=9.4.0'
-    libglib: '>=2.70.2,<3.0a0'
-    pango: '>=1.50.3,<1.51.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/gtk2-2.24.33-h90689f9_2.tar.bz2
+    atk-1.0: '>=2.38.0'
+    cairo: '>=1.18.0,<2.0a0'
+    gdk-pixbuf: '>=2.42.10,<3.0a0'
+    gettext: '>=0.21.1,<1.0a0'
+    libgcc-ng: '>=12'
+    libglib: '>=2.78.3,<3.0a0'
+    pango: '>=1.50.14,<2.0a0'
+  url: https://conda.anaconda.org/conda-forge/linux-64/gtk2-2.24.33-h7f000aa_3.conda
   hash:
-    md5: 957a0255ab58aaf394a91725d73ab422
-    sha256: 66d189ec36d67309fa3eb52d14d77b82359c10303c400eecc14f8eaca5939b87
+    md5: 0abfa7f9241a0f4fd732bc15773cfb0c
+    sha256: e659f5eca2a5f21d5fe859d8d1dae132a284800eb017b8b4e2286b252a230527
   category: main
   optional: false
 - name: librsvg
