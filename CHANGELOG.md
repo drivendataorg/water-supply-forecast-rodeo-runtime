@@ -1,5 +1,10 @@
 # Changelog
 
+## December 14, 2023
+
+- Added pyarrow v12.0.1 to runtime
+- Changed xgboost to v2.0.2
+
 ## December 12, 2023
 
 - Added dataretrieval v1.0.6 to the runtime image.

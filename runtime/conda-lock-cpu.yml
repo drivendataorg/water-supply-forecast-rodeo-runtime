@@ -13,7 +13,7 @@
 version: 1
 metadata:
   content_hash:
-    linux-64: ad7e25f898825b09b27a8529617c2c2339b43c210f9b0dc7a7d39d45c4b226bf
+    linux-64: 7fadb5c9ecdbfdb47167569bd60fbd2e45f4c21befd4c610ef70dd2fe3953564
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -31,17 +31,6 @@ package:
   hash:
     md5: d7c89558ba9fa0495403155b64376d81
     sha256: fe51de6107f9edc7aa4f786a70f4a883943bc9d39b3bb7307c04c41410990726
-  category: main
-  optional: false
-- name: _py-xgboost-mutex
-  version: '2.0'
-  manager: conda
-  platform: linux-64
-  dependencies: {}
-  url: https://conda.anaconda.org/conda-forge/linux-64/_py-xgboost-mutex-2.0-cpu_0.tar.bz2
-  hash:
-    md5: 23b8f98a355030331f40d0245492f715
-    sha256: 504b46c85d81269b24e7b22309064886cfc873955e77daf0eb794d8e7ec8cc06
   category: main
   optional: false
 - name: _r-mutex
@@ -715,20 +704,6 @@ package:
   hash:
     md5: 30de3fd9b3b602f7473f30e684eeea8c
     sha256: 68764a760fa81ef35dacb067fe8ace452bbb41476536a4a147a1051df29525f0
-  category: main
-  optional: false
-- name: libxgboost
-  version: 1.7.6
-  manager: conda
-  platform: linux-64
-  dependencies:
-    _openmp_mutex: '>=4.5'
-    libgcc-ng: '>=12'
-    libstdcxx-ng: '>=12'
-  url: https://conda.anaconda.org/conda-forge/linux-64/libxgboost-1.7.6-cpu_h6728c87_6.conda
-  hash:
-    md5: 9183d0551aa5e5be36c670e701b287a3
-    sha256: 852d995f4bd83cc05e8c0c72e3ca6f03b1e410d6c5d9b434f5c4654db04b0c0e
   category: main
   optional: false
 - name: libzlib
@@ -4232,15 +4207,15 @@ package:
   platform: linux-64
   dependencies:
     cached-property: ''
-    hdf5: '>=1.14.2,<1.14.4.0a0'
+    hdf5: '>=1.14.3,<1.14.4.0a0'
     libgcc-ng: '>=12'
     numpy: '>=1.22.4,<2.0a0'
     python: '>=3.10,<3.11.0a0'
     python_abi: 3.10.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/h5py-3.10.0-nompi_py310ha2ad45a_100.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/h5py-3.10.0-nompi_py310h65828d5_101.conda
   hash:
-    md5: dab51c266c6be866e0a5d101bfb0cd58
-    sha256: f1af30a4d13b65667f3878b072187f61a80299ea44b47f996612d955bff58b0a
+    md5: 44c185c5b133ad6d1d449839407aa863
+    sha256: 42ca5cdf60ee7c1a246ecce0d42a180c03a3d6401dae9e484dbc55b93cd96429
   category: main
   optional: false
 - name: jasper
@@ -5270,24 +5245,6 @@ package:
     sha256: 036f1dde110f0de541e25b8cfbbbc3e91e7f4e8171b4374f90357e5eede8b3d6
   category: main
   optional: false
-- name: py-xgboost
-  version: 1.7.6
-  manager: conda
-  platform: linux-64
-  dependencies:
-    _py-xgboost-mutex: '2.0'
-    libxgboost: 1.7.6
-    numpy: ''
-    python: '>=3.10,<3.11.0a0'
-    python_abi: 3.10.*
-    scikit-learn: ''
-    scipy: ''
-  url: https://conda.anaconda.org/conda-forge/linux-64/py-xgboost-1.7.6-cpu_py310h78d450f_6.conda
-  hash:
-    md5: dcc61476de611ac5673698495b607109
-    sha256: 2343bae5ab566fc6e5e37899e600452a4e0c758739e62765c21ecbe0b400157b
-  category: main
-  optional: false
 - name: pygrib
   version: 2.1.5
   manager: conda
@@ -6241,7 +6198,7 @@ package:
   category: main
   optional: false
 - name: r-ucminf
-  version: 1.2.0
+  version: 1.2.1
   manager: conda
   platform: linux-64
   dependencies:
@@ -6249,10 +6206,10 @@ package:
     libgfortran-ng: ''
     libgfortran5: '>=12.3.0'
     r-base: '>=4.3,<4.4.0a0'
-  url: https://conda.anaconda.org/conda-forge/linux-64/r-ucminf-1.2.0-r43h61816a4_1.conda
+  url: https://conda.anaconda.org/conda-forge/linux-64/r-ucminf-1.2.1-r43h61816a4_0.conda
   hash:
-    md5: bb191317c1b0f4400fc92b9357bc4b07
-    sha256: 45b891adcb0a2edaf28372d09b1b4a820e4d1a38f56953a302db87480df96130
+    md5: 8e77baee57a3a4b20b9435a8c48c0b0e
+    sha256: 51ae21abd2e6c8cb47a99ea89575f5f38dcec6f0f087b895f48503fb961c8fab
   category: main
   optional: false
 - name: r-utf8
@@ -6420,6 +6377,23 @@ package:
   hash:
     md5: ca4298a4ecd2523e106be2fd531e9469
     sha256: 011902580ff31372216dfd23ae87d90ce5127f7f0c70c4eea701b46577d3b1f6
+  category: main
+  optional: false
+- name: pyarrow
+  version: 12.0.1
+  manager: conda
+  platform: linux-64
+  dependencies:
+    libarrow: 12.0.1
+    libgcc-ng: '>=12'
+    libstdcxx-ng: '>=12'
+    numpy: '>=1.21.6,<2.0a0'
+    python: '>=3.10,<3.11.0a0'
+    python_abi: 3.10.*
+  url: https://conda.anaconda.org/conda-forge/linux-64/pyarrow-12.0.1-py310h0576679_8_cpu.conda
+  hash:
+    md5: 27f55ccfd038d6665facb04a0aa572c5
+    sha256: e4d358380289c2380a207111300ea04e21b4a00582e96be926df15e09e01f2af
   category: main
   optional: false
 - name: python-graphviz
@@ -6951,20 +6925,6 @@ package:
   hash:
     md5: 8e765a0eca0ce1cfa889cd9af82a23a8
     sha256: a5d6cc552c4a3fe3f554ad0fc235d4802c4732ec83ef091ce0ed0c2a6df9c37f
-  category: main
-  optional: false
-- name: xgboost
-  version: 1.7.6
-  manager: conda
-  platform: linux-64
-  dependencies:
-    py-xgboost: 1.7.6
-    python: '>=3.10,<3.11.0a0'
-    python_abi: 3.10.*
-  url: https://conda.anaconda.org/conda-forge/linux-64/xgboost-1.7.6-cpu_py310h78d450f_6.conda
-  hash:
-    md5: 061a099093fd2a97ae506f65dc87baf2
-    sha256: 1b96588a304e224bd2168a1a3866107aae2d3fe60958cf5e7958f837e2592fa9
   category: main
   optional: false
 - name: catboost
@@ -8389,7 +8349,7 @@ package:
   category: main
   optional: false
 - name: r-recipes
-  version: 1.0.8
+  version: 1.0.9
   manager: conda
   platform: linux-64
   dependencies:
@@ -8415,10 +8375,10 @@ package:
     r-timedate: ''
     r-vctrs: '>=0.5.0'
     r-withr: ''
-  url: https://conda.anaconda.org/conda-forge/noarch/r-recipes-1.0.8-r43hc72bb7e_0.conda
+  url: https://conda.anaconda.org/conda-forge/noarch/r-recipes-1.0.9-r43hc72bb7e_0.conda
   hash:
-    md5: 526e5f9dcf8e18fe8c2bdda8efcb95d7
-    sha256: e16c02acc3cec15d6671379b6f7164567b0e2342a037304829633a382829b955
+    md5: 79420b7bfe0452b750df803811f43a36
+    sha256: 5a88161bcaa348e09a5031a770dfa82dcdead13ebf888d72fab79570f7e266ea
   category: main
   optional: false
 - name: r-caret
@@ -8668,5 +8628,17 @@ package:
   url: https://files.pythonhosted.org/packages/27/8b/877ed6cb174e6a7e9dbee780f713506a1c2b15db3874ead04b029ddd58b2/quantile_forest-1.2.3-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
   hash:
     sha256: be456e52c812cbd5ed76102899caedd908f51183a202cde5879420cf93d17d12
+  category: main
+  optional: false
+- name: xgboost
+  version: 2.0.2
+  manager: pip
+  platform: linux-64
+  dependencies:
+    numpy: '*'
+    scipy: '*'
+  url: https://files.pythonhosted.org/packages/63/ca/37b83f59b0efd919c03c52ad7e2473dced674f2f6eb07b9d6f7d80e4c54c/xgboost-2.0.2-py3-none-manylinux2014_x86_64.whl
+  hash:
+    sha256: 351acb1696f6e83ce7650a8ca1fee5d4f9e4cef78d39c0973984c8eb226e2bff
   category: main
   optional: false
