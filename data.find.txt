@@ -1,3 +1,5 @@
+data/BasinATLAS_Data_v10.gdb.zip
+data/NLCD_impervious_2021_release_all_files_20230630.zip
 data/cdec/FY2005/AGP.csv
 data/cdec/FY2005/ALP.csv
 data/cdec/FY2005/BCB.csv
@@ -6056,6 +6058,7 @@ data/modis_vegetation/FY2023/MYD13A1.A2023201.h10v04.061.2023219212757/vegetatio
 data/modis_vegetation/FY2023/MYD13A1.A2023201.h11v03.061.2023219213754/metadata.json
 data/modis_vegetation/FY2023/MYD13A1.A2023201.h11v03.061.2023219213754/vegetation.nc
 data/modis_vegetation/FY2023/sites_to_items.csv
+data/nlcd_release_dates.csv
 data/pdsi/FY2005/pdsi_2004-10-01_2005-07-21.nc
 data/pdsi/FY2007/pdsi_2006-10-01_2007-07-21.nc
 data/pdsi/FY2009/pdsi_2008-10-01_2009-07-21.nc

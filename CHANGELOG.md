@@ -1,5 +1,11 @@
 # Changelog
 
+## December 14, 2023 (2)
+
+- Added instructions to README and updated file manifests for the following two data sources:
+    - NLCD urban imperviousness (`NLCD_impervious_2021_release_all_files_20230630.zip`, `nlcd_release_dates.csv`)
+    - BasinATLAS basin attributes (`BasinATLAS_Data_v10.gdb.zip`)
+
 ## December 14, 2023
 
 - Added pyarrow v12.0.1 to runtime

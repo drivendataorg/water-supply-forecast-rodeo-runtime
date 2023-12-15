@@ -1,3 +1,5 @@
+2.6G	data/BasinATLAS_Data_v10.gdb.zip
+19G	data/NLCD_impervious_2021_release_all_files_20230630.zip
 93M	data/cdec
 64K	data/cdec_snow_stations.csv
 352K	data/cpc_climate_divisions.gpkg
@@ -6,6 +8,7 @@
 1.7G	data/grace_indicators
 8.0K	data/metadata.csv
 50G	data/modis_vegetation
+4.0K	data/nlcd_release_dates.csv
 913M	data/pdsi
 16K	data/smoke_submission_format.csv
 38G	data/snodas

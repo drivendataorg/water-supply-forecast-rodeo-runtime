@@ -72,8 +72,14 @@ You will also need to download the following files from the competition [data do
 - `metadata.csv` -> `data/metadata.csv`
 - `cdec_snow_stations.csv` -> `data/cdec_snow_stations.csv`
 - `cpc_climate_divisions.gpkg` -> `data/cpc_climate_divisions.gpkg`
+- `nlcd_release_dates.csv` -> `data/nlcd_release_dates.csv`
 
-You will need at least 92 GB in free disk space to download all datasets. See the ["Expected files"](#expected-files) section below for a breakdown by data source.
+Additionally, the following data products are static releases and involve large single files. If you are planning to use any of the following datasets, please manually download it from its approved source and move it into the designated location.
+
+- [BasinATLAS basin attributes](https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/page/801/#basinatlas-basin-attributes) -> `data/BasinATLAS_Data_v10.gdb.zip` (2.7 GB)
+- [NLCD Urban Imperviousness](https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/page/801/#national-land-cover-database-nlcd-urban-imperviousness) -> `data/NLCD_impervious_2021_release_all_files_20230630.zip` (19.54 GB)
+
+You will need at least 115 GB in free disk space to download all datasets. See the ["Expected files"](#expected-files) section below for a breakdown by data source.
 
 ### Usage
 
