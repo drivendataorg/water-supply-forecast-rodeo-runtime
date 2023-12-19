@@ -1,5 +1,11 @@
 # Changelog
 
+## December 19, 2023
+
+- Added the following R dependencies to the runtime image:
+    - r-pls v2.8
+    - r-kernlab v0.9
+
 ## December 14, 2023 (2)
 
 - Added instructions to README and updated file manifests for the following two data sources:

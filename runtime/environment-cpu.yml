@@ -77,3 +77,5 @@ dependencies:
   - r-lubridate=1.9.3
   - r-readr=2.1.4
   - r-stringr=1.5.1
+  - r-pls=2.8
+  - r-kernlab=0.9
