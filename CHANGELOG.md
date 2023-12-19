@@ -1,5 +1,10 @@
 # Changelog
 
+## December 19, 2023 (2)
+
+- Added the following hosts to the firewall allowlist ([`allowed_hosts.txt`](./allowed_hosts.txt))
+    - USGS FEWS Net file servers for [USGS SSEBop Evapotranspiration](https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/page/801/#usgs-ssebop-evapotranspiration) (`edcintl.cr.usgs.gov`)
+
 ## December 19, 2023
 
 - Added the following R dependencies to the runtime image:

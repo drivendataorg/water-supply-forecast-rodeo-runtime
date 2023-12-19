@@ -9,6 +9,7 @@ cds.climate.copernicus.eu
 hydro1.gesdisc.eosdis.nasa.gov
 downloads.psl.noaa.gov
 psl.noaa.gov
+edcintl.cr.usgs.gov
 planetarycomputer.microsoft.com
 modiseuwest.blob.core.windows.net
 elevationeuwest.blob.core.windows.net
