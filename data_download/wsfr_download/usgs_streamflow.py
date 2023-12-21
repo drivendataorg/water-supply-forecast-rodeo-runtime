@@ -13,6 +13,7 @@ See the challenge website for more about this approved data source:
 https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/page/801/#usgs-streamflow
 """
 
+from datetime import datetime, timedelta
 from typing import Annotated
 
 from dataretrieval import nwis
@@ -39,6 +40,9 @@ def get_daily_values_for_usgs_site(
     dataretrieval Python package published by USGS.
     https://github.com/DOI-USGS/dataretrieval-python
 
+    The end date defined by `fy_end_month` and `fy_end_day` is exclusive, i.e. for Jan 1,
+    the most recent data will be for Dec 31.
+
     Args:
         usgs_id (str): USGS 8-digit identifier
         forecast_year (int): Year whose forecast season this data is for.
@@ -51,7 +55,9 @@ def get_daily_values_for_usgs_site(
         pd.DataFrame: dataframe of retrieved data
     """
     start_date = f"{forecast_year - 1}-{fy_start_month:02}-{fy_start_day:02}"
-    end_date = f"{forecast_year}-{fy_end_month:02}-{fy_end_day:02}"
+    # end date is exclusive; offset to day before and convert to date string.
+    end_date = datetime(forecast_year, fy_end_month, fy_end_day) - timedelta(days=1)
+    end_date = str(end_date.date())
     df, _ = nwis.get_dv(
         sites=[usgs_id],
         start=start_date,
@@ -71,7 +77,7 @@ def download_usgs_streamflow(
     fy_start_month: Annotated[int, typer.Option(help="Forecast year start month.")] = 10,
     fy_start_day: Annotated[int, typer.Option(help="Forecast year start day.")] = 1,
     fy_end_month: Annotated[int, typer.Option(help="Forecast year end month.")] = 7,
-    fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 21,
+    fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 22,
     skip_existing: Annotated[bool, typer.Option(help="Whether to skip an existing file.")] = True,
 ):
     """Download daily mean streamflow data from USGS streamgages located at the forecast sites in
@@ -79,6 +85,9 @@ def download_usgs_streamflow(
     data begins on the specified date of the previous calendar year, and ends on the specified date
     of the same calendar year. By default, each forecast year starts on October 1 and ends July 21;
     e.g., by default, FY2021 data starts on 2020-10-01 and ends on 2021-07-21.
+
+    When provided, the end date defined by `fy_end_month` and `fy_end_day` is exclusive,
+    i.e. for July 22, the most recent data will be for July 21.
 
     To download equivalent data for other locations, see the function
     wsfr_download.usgs_streamflow.get_daily_values_for_usgs_site

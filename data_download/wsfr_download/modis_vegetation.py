@@ -12,7 +12,7 @@ You can also import this module and use it as a library.
 See the challenge website for more about this approved data source:
 https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-dev/page/801/#modis-vegetation-indices
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import partial
 import json
 from pathlib import Path
@@ -20,6 +20,7 @@ import shutil
 import threading
 from typing import Annotated
 
+import dateutil
 from loguru import logger
 import odc.stac
 import pandas as pd
@@ -123,7 +124,12 @@ def identify_items_for_basin(
     date_range = format_date_range(start, end)
     res = catalog.search(collections=["modis-13A1-061"], bbox=bbox, datetime=date_range)
 
-    return basin_id, [item for item in res.item_collection()]
+    # Filter out items where end datetime is later than desired end date
+    return basin_id, [
+        item
+        for item in res.item_collection()
+        if dateutil.parser.parse(item.properties["end_datetime"]).date() <= end.date()
+    ]
 
 
 def download_modis_vegetation(
@@ -131,7 +137,7 @@ def download_modis_vegetation(
     fy_start_month: Annotated[int, typer.Option(help="Forecast year start month.")] = 10,
     fy_start_day: Annotated[int, typer.Option(help="Forecast year start day.")] = 1,
     fy_end_month: Annotated[int, typer.Option(help="Forecast year end month.")] = 7,
-    fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 21,
+    fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 22,
     skip_existing: Annotated[bool, typer.Option(help="Whether to skip an existing file.")] = True,
 ):
     """Download MODIS vegetation indices from the Planetary Computer:
@@ -150,6 +156,9 @@ def download_modis_vegetation(
     year, and ends in the specified month of the current calendar year. By
     default, each forecast year starts in October and ends in July; e.g.,
     by default, FY2021 starts in October 2020 and ends in July 2021.
+
+    When provided, the end date defined by `fy_end_month` and `fy_end_day` is exclusive,
+    i.e. for July 22, the most recent data will be for July 21.
     """
     logger.info("Downloading MODIS Vegetation Indices...")
 
@@ -168,7 +177,8 @@ def download_modis_vegetation(
 
         # Identify items to download
         fy_start = datetime(fy - 1, fy_start_month, fy_start_day)
-        fy_end = datetime(fy, fy_end_month, fy_end_day)
+        end_date = datetime(fy, fy_end_month, fy_end_day)
+        fy_end = end_date - timedelta(days=1)
         logger.info(
             f"Identifying items for FY {fy} ({fy_start.strftime('%Y-%m-%d')} to"
             f" {fy_end.strftime('%Y-%m-%d')}) across {len(basins_gdf):,} basins"

@@ -19,6 +19,7 @@ dependencies = [
   "pandas",
   "planetary-computer",
   "pydantic",
+  "python-dateutil",
   "pyyaml",
   "requests",
   "stamina",

@@ -73,11 +73,26 @@ class DataSourceConfig(BaseModel):
 
 
 class BulkConfig(BaseModel):
-    """Data model for YAML-based configuration file for the `bulk` download command."""
+    """Data model for YAML-based configuration file for the `bulk` download command.
+
+    When provided, the end date defined by `fy_end_month` and `fy_end_day` is exclusive,
+    i.e., for Jan 1, the most recent data will be for Dec 31.
+    """
 
     forecast_years: list[int]
-    skip_existing: bool
-    data_sources: list[DataSourceConfig]
+    fy_start_month: int | None = None
+    fy_start_day: int | None = None
+    fy_end_month: int | None = None
+    fy_end_day: int | None = None
+    skip_existing: bool = True
+    data_sources: list[DataSourceConfig] = Field(default_factory=list, validate_default=True)
+
+    @field_validator("data_sources")
+    @classmethod
+    def data_sources_must_not_be_empty(cls, v: str) -> str:
+        if not v:
+            raise ValueError("data_sources must not be empty")
+        return v
 
 
 @app.command()
@@ -101,15 +116,28 @@ def bulk(config: Annotated[Path, typer.Argument(help="Path to config file.")]):
     for data_source_config in bulk_config.data_sources:
         fn = DATA_SOURCE_TO_FUNCTION[data_source_config.name]
         try:
-            fn(
-                forecast_years=bulk_config.forecast_years,
-                skip_existing=bulk_config.skip_existing,
-                **data_source_config.kwargs,
+            # take union of bulk config and data source config args;
+            # latter overrides former for key collisions.
+            kwargs = (
+                bulk_config.model_dump(exclude="data_sources", exclude_none=True)
+                | data_source_config.kwargs
             )
+            fn(**kwargs)
         except TypeError as exc:
-            if "got an unexpected keyword argument 'forecast_years'" in str(exc):
-                # Teleconnection download function that doesn't require specifying years
-                fn(skip_existing=bulk_config.skip_existing, **data_source_config.kwargs)
+            if "got an unexpected keyword argument" in str(exc):
+                try:
+                    # CPC outlooks download does not require fy start and end parameters
+                    fn(
+                        forecast_years=bulk_config.forecast_years,
+                        skip_existing=bulk_config.skip_existing,
+                        **data_source_config.kwargs,
+                    )
+                except TypeError as exc:
+                    if "got an unexpected keyword argument" in str(exc):
+                        # Teleconnection download function that doesn't require specifying years
+                        fn(skip_existing=bulk_config.skip_existing, **data_source_config.kwargs)
+                    else:
+                        raise
             else:
                 raise
     logger.success("Bulk download complete.")

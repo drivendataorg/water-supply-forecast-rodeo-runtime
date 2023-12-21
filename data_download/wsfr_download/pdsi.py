@@ -106,7 +106,7 @@ def download_pdsi(
     fy_start_month: Annotated[int, typer.Option(help="Forecast year start month.")] = 10,
     fy_start_day: Annotated[int, typer.Option(help="Forecast year start day.")] = 1,
     fy_end_month: Annotated[int, typer.Option(help="Forecast year end month.")] = 7,
-    fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 21,
+    fy_end_day: Annotated[int, typer.Option(help="Forecast year end day.")] = 22,
     skip_existing: Annotated[bool, typer.Option(help="Whether to skip an existing file.")] = True,
 ):
     """Download Palmer Drought Severity Index data from the
@@ -116,13 +116,17 @@ def download_pdsi(
     year, and ends on the specified date of the current calendar year. By
     default, each forecast year starts on October 1 and ends July 21; e.g.,
     by default, FY2021 starts on 2020-10-01 and ends on 2021-07-21.
+
+    When provided, the end date defined by `fy_end_month` and `fy_end_day` is exclusive,
+    i.e. for July 22, the most recent data will be for July 21.
     """
     logger.info("Downloading Palmer Drought Severity Index data...")
 
     download_results = []
     for fy in forecast_years:
         start = datetime(fy - 1, fy_start_month, fy_start_day).strftime("%Y-%m-%d")
-        end = datetime(fy, fy_end_month, fy_end_day).strftime("%Y-%m-%d")
+        end_date = datetime(fy, fy_end_month, fy_end_day)
+        end = (end_date - timedelta(days=1)).strftime("%Y-%m-%d")
         logger.info(f"Downloading PDSI for forecast year {fy} ({start} to {end})")
 
         out_file = DATA_ROOT / f"pdsi/FY{str(fy)}/pdsi_{start}_{end}.nc"

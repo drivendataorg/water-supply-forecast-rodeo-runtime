@@ -1,5 +1,13 @@
 # Changelog
 
+## December 22, 2023
+
+- Updated wsfr-download for the Forecast Stage
+    - Added `data_download/forecast_config-2023-01-01.yml` bulk config file for the initial trial issue date.
+    - Changed the bulk config schema so that all options can be set at the top level to apply to all data sources.
+    - Changed data download functions in wsfr-download have been updated so that the end date is exclusive. This means that you can use the issue date as the end date and download data appropriately that excludes the issue date itself.
+    - Changed `modis_vegetation` to filter out items whose end dates are later than the end date being queried.
+
 ## December 19, 2023 (2)
 
 - Added the following hosts to the firewall allowlist ([`allowed_hosts.txt`](./allowed_hosts.txt))
