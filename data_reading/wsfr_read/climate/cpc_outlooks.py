@@ -6,7 +6,7 @@ from typing import Iterator, Literal
 import geopandas as gpd
 import pandas as pd
 
-from wsfr_read.config import DATA_ROOT
+from wsfr_read.config import DATA_ROOT, logger
 from wsfr_read.sites import read_geospatial, read_metadata
 
 CPC_OUTLOOKS_DIR = DATA_ROOT / "cpc_outlooks"
@@ -45,14 +45,17 @@ def _table_data_generator(
                 buffer.close()
                 return
             elif first_header_substr in line:
-                # Read issue date from first header line
-                month, day, year = int(line[:2].strip()), int(line[2:4]), int(line[5:9])
-                issue_date = datetime.date(year, month, day)
+                # Flush existing buffer
                 if buffer.tell():
+                    if issue_date is None:
+                        raise Exception("Parsing error. No issue date but buffer is not empty.")
                     buffer.seek(0)
                     yield issue_date, buffer
                     buffer.close()
                     buffer = StringIO()
+                # Read issue date from first header line
+                month, day, year = int(line[:2].strip()), int(line[2:4]), int(line[5:9])
+                issue_date = datetime.date(year, month, day)
             elif line.startswith("YEAR"):
                 # Second header line with columns
                 # Skip column header row because the widths don't match the data
@@ -61,6 +64,12 @@ def _table_data_generator(
             else:
                 # Add data line to buffer
                 buffer.write(line)
+    # End of file, flush buffer and exit generator
+    if buffer.tell():
+        buffer.seek(0)
+        yield issue_date, buffer
+        buffer.close()
+        return
 
 
 TEMP_WIDTHS = (
@@ -219,14 +228,22 @@ def read_cpc_outlooks_temp(
         pd.DataFrame: Dataframe with outlooks. See documentation for details about the data.
     """
     issue_date = pd.to_datetime(issue_date)
+    data_frames = []
     prev_year_df = _read_outlook_for_year(issue_date.year - 1, Variable.TEMP)
-    this_year_df = _read_outlook_for_year(issue_date.year, Variable.TEMP)
-    df = pd.concat(
-        [
-            prev_year_df[prev_year_df.index.get_level_values("MN") >= fy_start_month],
-            this_year_df[this_year_df.index.get_level_values("issue_date") < issue_date],
-        ]
-    )
+    data_frames.append(prev_year_df[prev_year_df.index.get_level_values("MN") >= fy_start_month])
+    try:
+        this_year_df = _read_outlook_for_year(issue_date.year, Variable.TEMP)
+        data_frames.append(
+            this_year_df[this_year_df.index.get_level_values("issue_date") < issue_date]
+        )
+    except FileNotFoundError:
+        logger.warning(
+            "No CPC temperature outlooks available for calender year {}. "
+            "Only data from calender year {} loaded.",
+            issue_date.year,
+            issue_date.year - 1,
+        )
+    df = pd.concat(data_frames)
 
     if site_id:
         cds = get_climate_divisions_for_site_id(site_id)
@@ -263,14 +280,22 @@ def read_cpc_outlooks_precip(
         pd.DataFrame: Dataframe with outlooks. See documentation for details about the data.
     """
     issue_date = pd.to_datetime(issue_date)
+    data_frames = []
     prev_year_df = _read_outlook_for_year(issue_date.year - 1, Variable.PRECIP)
-    this_year_df = _read_outlook_for_year(issue_date.year, Variable.PRECIP)
-    df = pd.concat(
-        [
-            prev_year_df[prev_year_df.index.get_level_values("MN") >= fy_start_month],
-            this_year_df[this_year_df.index.get_level_values("issue_date") < issue_date],
-        ]
-    )
+    data_frames.append(prev_year_df[prev_year_df.index.get_level_values("MN") >= fy_start_month])
+    try:
+        this_year_df = _read_outlook_for_year(issue_date.year, Variable.PRECIP)
+        data_frames.append(
+            this_year_df[this_year_df.index.get_level_values("issue_date") < issue_date]
+        )
+    except FileNotFoundError:
+        logger.warning(
+            "No CPC precipitation outlooks available for calender year {}. "
+            "Only data from calender year {} loaded.",
+            issue_date.year,
+            issue_date.year - 1,
+        )
+    df = pd.concat(data_frames)
 
     if site_id:
         cds = get_climate_divisions_for_site_id(site_id)

@@ -33,7 +33,7 @@ lock = threading.Lock()
 
 # Get all possible dates
 # Data is available for every 7 days starting Apr 1, 2002
-POSSIBLE_DATES = pd.Series(pd.date_range("2002-04-01", "2023-07-21", freq="7D"))
+POSSIBLE_DATES = pd.Series(pd.date_range("2002-04-01", "2024-07-21", freq="7D"))
 
 
 def generate_source_urls(date: str, try_extensions: list[str] = ["030", "040"]) -> list[str]:

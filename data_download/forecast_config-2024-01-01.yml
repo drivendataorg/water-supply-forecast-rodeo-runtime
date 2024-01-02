@@ -1,0 +1,32 @@
+# Config file for bulk downloading feature data for
+# issue date (2024-01-01) for the Forecast Stage.
+# To be used with `python -m wsfr_download bulk <path-to-this-file>`
+# See `python -m wsfr_download bulk --help` for details.
+
+forecast_years: [2024]
+fy_start_month: 10
+fy_start_day: 1
+fy_end_month: 1
+fy_end_day: 1
+skip_existing: false
+data_sources:
+  # Antecedent streamflow
+  - name: usgs_streamflow
+  # Snowpack
+  - name: snotel
+  - name: snodas
+  - name: cdec
+  # Climate and weather
+  - name: cpc_outlooks
+  # Drought/moisture conditions
+  - name: grace_indicators
+  - name: pdsi
+  # Teleconnections
+  - name: mjo
+  - name: nino_regions_sst
+  - name: oni
+  - name: pdo
+  - name: pna
+  - name: soi
+  # Vegetation
+  - name: modis_vegetation

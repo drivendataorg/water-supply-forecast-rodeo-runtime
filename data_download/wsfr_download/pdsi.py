@@ -86,16 +86,15 @@ def validate_netcdf4(file_path: Path, fy_start_month: int, fy_end_month: int) ->
     if ds_keys != {"daily_mean_palmer_drought_severity_index", "day", "lat", "lon"}:
         logger.warning(f"Data at {file_path} has unexpected variable keys: {ds_keys}")
 
-    file_fy = int(file_path.parent.name[-4:])
     calendar_start = datetime(1900, 1, 1)
     min_date = calendar_start + timedelta(days=min(ds.variables["day"][:]))
-    if (min_date.year != file_fy - 1) or (min_date.month != fy_start_month):
-        logger.warning(f"Unexpected minimum date for {file_path}: {min_date}")
-
     max_date = calendar_start + timedelta(days=max(ds.variables["day"][:]))
-    if (max_date.year != file_fy) or (max_date.month != fy_end_month):
-        logger.warning(f"Unexpected maximum date for {file_path}: {min_date}")
-
+    logger.info(
+        "Downloaded data for {} dates with date range {} to {}.",
+        len(ds.variables["day"]),
+        str(min_date),
+        str(max_date),
+    )
     ds.close()
 
     return True

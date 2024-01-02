@@ -48,25 +48,26 @@ def download_cpc_outlooks_for_year(
     """Download CPC temperature and precipitation outlook data files for a given calendar year."""
     session = _get_session()
 
-    resp_temp = session.get(TEMP_URL_TEMPLATE.format(year=year))
-    temp_out_file = CPC_OUTLOOKS_DIR / f"cpcllftd.{year}.dat"
-    if skip_existing and temp_out_file.exists():
-        temp_result = DownloadResult.SKIPPED_EXISTING
-    else:
-        with temp_out_file.open("w") as fp:
-            fp.write(resp_temp.text)
-        temp_result = DownloadResult.SUCCESS
+    results = []
+    for url_template, file_template in [
+        (TEMP_URL_TEMPLATE, "cpcllftd.{year}.dat"),
+        (PRECIP_URL_TEMPLATE, "cpcllfpd.{year}.dat"),
+    ]:
+        out_file = CPC_OUTLOOKS_DIR / file_template.format(year=year)
+        if skip_existing and out_file.exists():
+            results.append(DownloadResult.SKIPPED_EXISTING)
+        else:
+            resp = session.get(url_template.format(year=year))
+            if resp.status_code == 200:
+                with out_file.open("w") as fp:
+                    fp.write(resp.text)
+                results.append(DownloadResult.SUCCESS)
+            elif resp.status_code == 404:
+                results.append(DownloadResult.SKIPPED_NO_DATA)
+            else:
+                resp.raise_for_status()
 
-    resp_precip = session.get(PRECIP_URL_TEMPLATE.format(year=year))
-    precip_out_file = CPC_OUTLOOKS_DIR / f"cpcllfpd.{year}.dat"
-    if skip_existing and precip_out_file.exists():
-        precip_result = DownloadResult.SKIPPED_EXISTING
-    else:
-        with precip_out_file.open("w") as fp:
-            fp.write(resp_precip.text)
-        precip_result = DownloadResult.SUCCESS
-
-    return temp_result, precip_result
+    return tuple(results)
 
 
 def download_cpc_outlooks(

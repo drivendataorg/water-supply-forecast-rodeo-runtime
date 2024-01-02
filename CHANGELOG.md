@@ -1,5 +1,15 @@
 # Changelog
 
+## January 2, 2024
+
+- Fixed data download functions to work with 2024 forecast season:
+    - `cpc_outlooks`: Properly handles data files that don't exist.
+    - `grace_indicators`: Possible dates now includes 2024 water year.
+    - `pdsi`: Removed warning logs when nothing was wrong.
+- Fixed CPC outlooks reading functions (`wsfr_read.cpc_outlooks`):
+    - Warn instead of error if the current calendar year data file is not present.
+    - Correctly assign issue date and flush buffer in cases where data does not have `9999` termination indicator
+
 ## December 28, 2023
 
 - Updated wsfr-download for the Forecast Stage
