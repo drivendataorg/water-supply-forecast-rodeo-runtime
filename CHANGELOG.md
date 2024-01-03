@@ -1,5 +1,9 @@
 # Changelog
 
+## January 3, 2024
+
+- Added stamina v23.3.0 and zeep v4.2.1 to runtime environment.
+
 ## January 2, 2024
 
 - Fixed data download functions to work with 2024 forecast season:
