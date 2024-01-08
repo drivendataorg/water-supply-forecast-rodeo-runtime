@@ -1,5 +1,10 @@
 # Changelog
 
+## January 8, 2024
+
+- Added `scoring/` directory containing a scoring script you can use to locally calculate the challenge performance metrics. See [`scoring/README.md`](./scoring/README.md).
+- Added `data_download/forecast_config-2023-01-01.yml` bulk config file for the 2024-01-08 issue date.
+
 ## January 3, 2024
 
 - Added stamina v23.3.0 and zeep v4.2.1 to runtime environment.
