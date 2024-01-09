@@ -1,5 +1,11 @@
 # Changelog
 
+## January 9, 2024
+
+- Changed main supervisor script to log out predictions dataframe for Forecast Stage.
+- Changed main supervisor script to import `src.solution` after startup checks. This enables clearer logging and helps ensure that the transient data volume mounting issues resolve before running solution code ([forum thread](https://community.drivendata.org/t/empty-data-folder/9837)).
+- Changed main supervisor script to log structured events for easier analysis and debugging by admins.
+
 ## January 8, 2024
 
 - Added `scoring/` directory containing a scoring script you can use to locally calculate the challenge performance metrics. See [`scoring/README.md`](./scoring/README.md).

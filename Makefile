@@ -204,6 +204,7 @@ endif
 		${NETWORK_ARGS} \
 		--env "LOGURU_LEVEL=INFO" \
 		--env "IS_SMOKE=${IS_SMOKE}" \
+		--env "FORECAST_ISSUE_DATE=${FORECAST_ISSUE_DATE}" \
 		--mount type=bind,source=${WSFR_DATA_ROOT},target=/code_execution/data,readonly \
 		--mount type=bind,source="$(shell pwd)/submission",target=/code_execution/submission \
 		--shm-size 8g \
