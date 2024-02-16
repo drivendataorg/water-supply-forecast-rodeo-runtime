@@ -1,0 +1,5 @@
+loguru
+numpy
+pandas
+scikit-learn
+tqdm
