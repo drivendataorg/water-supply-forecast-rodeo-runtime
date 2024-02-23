@@ -3,6 +3,7 @@ data.usbr.gov
 wcc.sc.egov.usda.gov
 cdec.water.ca.gov
 climate.arizona.edu
+snowview.arizona.edu
 data.rcc-acis.org
 grid2.rcc-acis.org
 cds.climate.copernicus.eu
