@@ -31,6 +31,7 @@ def download_nino_regions_sst(
     """Download Nino Regions Sea Surface Temperatures (SST) data."""
     logger.info("Downloading Nino Regions SST data...")
     response = requests.get(SOURCE_URL)
+    response.raise_for_status()
     out_file = DATA_ROOT.joinpath(*FILE_PATH_PARTS)
     logger.info(f"Output file path is {out_file}")
     if skip_existing and out_file.exists():

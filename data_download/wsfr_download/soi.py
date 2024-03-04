@@ -30,6 +30,7 @@ def download_soi(
     """Download Southern Oscillation Index data."""
     logger.info("Downloading SOI data...")
     response = requests.get(SOURCE_URL)
+    response.raise_for_status()
     out_file = DATA_ROOT.joinpath(*FILE_PATH_PARTS)
     logger.info(f"Output file path is {out_file}")
     if skip_existing and out_file.exists():

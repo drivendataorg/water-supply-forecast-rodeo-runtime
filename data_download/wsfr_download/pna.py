@@ -31,6 +31,7 @@ def download_pna(
     """Download Pacific-North American Index data."""
     logger.info("Downloading PNA Index data...")
     response = requests.get(SOURCE_URL)
+    response.raise_for_status()
     out_file = DATA_ROOT.joinpath(*FILE_PATH_PARTS)
     logger.info(f"Output file path is {out_file}")
     if skip_existing and out_file.exists():
