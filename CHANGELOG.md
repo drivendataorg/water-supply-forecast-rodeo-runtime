@@ -1,5 +1,13 @@
 # Changelog
 
+## October 31, 2024
+
+- Fixed runtime error in `wsfr_download.snotel` when the NRCS AWDB returned a 500 server error response. It will now retry when this happens.
+
+## March 4, 2024
+
+- Fixed wsfr-download to raise error if response status code for `oni`, `pdo`, `pna`, `soi`, and `nino_regions_sst` downloads is not a success. This will prevent error pages from being downloaded as the data.
+
 ## January 9, 2024
 
 - Changed main supervisor script to log out predictions dataframe for Forecast Stage.

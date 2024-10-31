@@ -14,6 +14,7 @@ https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-de
 
 import datetime
 import functools
+from http import HTTPStatus
 from pathlib import Path
 import threading
 from typing import Annotated
@@ -90,8 +91,12 @@ def _get_session() -> requests.Session:
     return thread_local.session
 
 
+class HttpServerError(Exception):
+    """Custom exception for 500 HTTP server errors."""
+
+
 @stamina.retry(
-    on=(requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError),
+    on=(requests.exceptions.ConnectTimeout, requests.exceptions.ConnectionError, HttpServerError),
     attempts=5,
     wait_initial=10.0,
     wait_max=60.0,
@@ -115,6 +120,12 @@ def get_data_for_station(
     )
     session = _get_session()
     response = session.get(url)
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        if response.status_code == HTTPStatus.INTERNAL_SERVER_ERROR:
+            raise HttpServerError("500 Internal Server Error")
+        raise e
     data = {
         entry["stationElement"]["elementCode"]
         + "_"
