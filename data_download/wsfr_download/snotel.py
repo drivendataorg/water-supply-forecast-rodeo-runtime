@@ -142,7 +142,7 @@ def _series_from_date_value_dicts(arr: list[dict]):
     by the AWDB REST Service data/ endpoint.
     """
     dates, values = zip(*[(entry["date"], entry.get("value", pd.NA)) for entry in arr])
-    return pd.Series(values, index=dates, dtype="float")
+    return pd.Series(values, index=dates, dtype="Float64")
 
 
 def download_station_data(
