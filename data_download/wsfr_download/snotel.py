@@ -141,7 +141,7 @@ def _series_from_date_value_dicts(arr: list[dict]):
     """Utility to build a pandas Series from the {"date": ..., "value": ...} JSON records returned
     by the AWDB REST Service data/ endpoint.
     """
-    dates, values = zip(*[(entry["date"], entry["value"]) for entry in arr])
+    dates, values = zip(*[(entry["date"], entry.get("value", pd.NA)) for entry in arr])
     return pd.Series(values, index=dates, dtype="float")
 
 

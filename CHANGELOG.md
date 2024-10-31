@@ -3,6 +3,7 @@
 ## October 31, 2024
 
 - Fixed runtime error in `wsfr_download.snotel` when the NRCS AWDB returned a 500 server error response. It will now retry when this happens.
+- Fixed runtime error in `wsfr_download.snotel` when returned variable had no `value` key in data payload. It will now parse as an NA.
 
 ## March 4, 2024
 
