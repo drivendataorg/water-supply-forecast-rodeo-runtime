@@ -28,6 +28,9 @@ dependencies = [
   "zeep",
 ]
 
+[dependency-groups]
+dev = ["pytest"]
+
 [project.urls]
 Home = "https://github.com/drivendataorg/water-supply-forecast-rodeo-runtime"
 

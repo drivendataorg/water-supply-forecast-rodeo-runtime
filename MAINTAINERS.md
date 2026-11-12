@@ -6,13 +6,16 @@ This file documents notes for maintainers of the repository.
 
 This directory contains a Python package `wsfr-download` that provides a CLI for downloading approved feature datasets. Package metadata, including abstract dependencies, are defined in the `pyproject.toml` file.
 
-### Pinning requirements
+### Locking requirements
 
-In order to have a reproducible environment, we use pip-tools to pin dependencies. From the repository root, run
+`pyproject.toml` declares the package and test dependencies; `uv.lock` pins the environment. From the repository root, run
 
 ```bash
-pip-compile data_download/pyproject.toml
+uv lock --project data_download
+uv sync --project data_download
 ```
+
+Run the package tests with `uv run --project data_download pytest data_download/tests`.
 
 ## data_reading
 

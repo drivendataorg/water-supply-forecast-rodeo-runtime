@@ -58,13 +58,12 @@ This repo contains a Python package named `wsfr-download` located in the `data_d
 > [!NOTE]
 > Data download code may be added for requested data sources that get approved.
 
-### Requirements and installation
+#### Requirements and installation
 
-Requires Python 3.10. To install with the exact dependencies that will be used by DrivenData, create a new virtual environment and run
+Requires Python 3.10. To create and sync the uv environment from the locked dependencies, run from the repository root:
 
 ```bash
-pip install -r ./data_download/requirements.txt
-pip install ./data_download/
+uv sync --project ./data_download
 ```
 
 By default, data is saved into a subdirectory named `data/` relative to your current working directory. You can explicitly override this by setting the environment variable `WSFR_DATA_ROOT` with another directory path. The expected default usage is that you run all commands with the root directory of this repository as your working directory.
@@ -89,7 +88,7 @@ You will need at least 115 GB in free disk space to download all datasets. See t
 To simply download all test feature data that will be available, use the `bulk` command. From the repository root as your working directory, run:
 
 ```bash
-python -m wsfr_download bulk data_download/hindcast_test_config.yml
+uv run --project ./data_download python -m wsfr_download bulk data_download/hindcast_test_config.yml
 ```
 
 #### Details
@@ -97,13 +96,13 @@ python -m wsfr_download bulk data_download/hindcast_test_config.yml
 You can invoke the CLI with `python -m wsfr_download`. For example, to see a list of all available commands:
 
 ```bash
-python -m wsfr_download --help
+uv run --project ./data_download python -m wsfr_download --help
 ```
 
 The CLI is organized with one command per data source, e.g., see
 
 ```bash
-python -m wsfr_download grace_indicators --help
+uv run --project ./data_download python -m wsfr_download grace_indicators --help
 ```
 
 There is also the `bulk` command for downloading multiple data sources at once, as shown in the previous section. A bulk download is configured by a YAML configuration file. The configuration file for the Hindcast test set is [`data_download/hindcast_test_config.yml`](data_download/hindcast_test_config.yml). To download feature data for training, create your own YAML configuration file for the years and data sources that you need using the test set file as an example.

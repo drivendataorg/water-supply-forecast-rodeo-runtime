@@ -87,8 +87,8 @@ def validate_netcdf4(file_path: Path, fy_start_month: int, fy_end_month: int) ->
         logger.warning(f"Data at {file_path} has unexpected variable keys: {ds_keys}")
 
     calendar_start = datetime(1900, 1, 1)
-    min_date = calendar_start + timedelta(days=min(ds.variables["day"][:]))
-    max_date = calendar_start + timedelta(days=max(ds.variables["day"][:]))
+    min_date = calendar_start + timedelta(days=int(min(ds.variables["day"][:])))
+    max_date = calendar_start + timedelta(days=int(max(ds.variables["day"][:])))
     logger.info(
         "Downloaded data for {} dates with date range {} to {}.",
         len(ds.variables["day"]),

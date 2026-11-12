@@ -154,11 +154,11 @@ def download_sensor_data(
             if this_station_df[["SENSOR_NUM", "date", "value"]].isna().any().any():
                 logger.warning(f"There are missing values for {station_id}")
             this_station_df["date"] = pd.to_datetime(this_station_df.date)
-            if (this_station_df.date.min() < start_date) or (
-                this_station_df.date.max() > end_date
+            if (this_station_df.date.min() < pd.Timestamp(start_date)) or (
+                this_station_df.date.max() > pd.Timestamp(end_date)
             ):
                 logger.warning(f"There are unexpected dates for {station_id}")
-            if this_station_df[["stationId", "date", "SENSOR_NUM"]].duplicated().any():
+            if this_station_df[["date", "SENSOR_NUM"]].duplicated().any():
                 logger.warning(f"There is duplicate data (date + sensor) for {station_id}")
 
         except KeyError:
