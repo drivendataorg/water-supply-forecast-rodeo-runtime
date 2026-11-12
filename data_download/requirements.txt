@@ -52,7 +52,7 @@ cloudpickle==3.0.0
     # via dask
 dask[array]==2023.11.0
     # via odc-stac
-dataretrieval==1.0.6
+dataretrieval==1.4.0
     # via wsfr-download (data_download/pyproject.toml)
 fiona==1.9.5
     # via geopandas

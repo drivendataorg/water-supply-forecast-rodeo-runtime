@@ -16,7 +16,7 @@ https://www.drivendata.org/competitions/254/reclamation-water-supply-forecast-de
 from datetime import datetime, timedelta
 from typing import Annotated
 
-from dataretrieval import nwis
+from dataretrieval import waterdata
 from loguru import logger
 import pandas as pd
 from tqdm import tqdm
@@ -58,13 +58,15 @@ def get_daily_values_for_usgs_site(
     # end date is exclusive; offset to day before and convert to date string.
     end_date = datetime(forecast_year, fy_end_month, fy_end_day) - timedelta(days=1)
     end_date = str(end_date.date())
-    df, _ = nwis.get_dv(
-        sites=[usgs_id],
-        start=start_date,
-        end=end_date,
-        statCd="00003",  # statCd 00003 is statistics code for "mean"
+    df, _ = waterdata.get_daily(
+        monitoring_location_id=f"USGS-{usgs_id}",
+        parameter_code="00060",
+        statistic_id="00003",
+        time=f"{start_date}/{end_date}",
     )
-    return df
+    df = df.rename(columns={"time": "datetime", "value": MEAN_DISCHARGE_RAW_COL})
+    df["datetime"] = pd.to_datetime(df["datetime"])
+    return df.set_index("datetime")[[MEAN_DISCHARGE_RAW_COL]]
 
 
 def has_discharge_col(df: pd.DataFrame) -> bool:
